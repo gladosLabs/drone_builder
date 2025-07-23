@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, forwardRef, useImperativeHandle } from "react";
 import { DndContext, useDraggable, useDroppable, closestCenter } from "@dnd-kit/core";
 import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
-import { useEffect } from "react";
 import { Html } from "@react-three/drei";
 
 function SortableLayer({ part, index, setSelectedPart, removePartByIdAtIndex }) {
@@ -304,7 +303,7 @@ function Drone3D({ parts, onSelect, onRemove, hoveredPartId, setHoveredPartId })
   );
 }
 
-export default function Dashboard() {
+const Dashboard = forwardRef(function Dashboard(props, ref) {
   const [canvasParts, setCanvasParts] = useState([]);
   const [selectedPart, setSelectedPart] = useState(null);
   const [warning, setWarning] = useState("");
@@ -322,6 +321,60 @@ export default function Dashboard() {
   const [analysis, setAnalysis] = useState(null);
   const [hoveredPartId, setHoveredPartId] = useState(null);
   const [layersOpen, setLayersOpen] = useState(true);
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [showUserModal, setShowUserModal] = useState(false);
+  const [user, setUser] = useState(null);
+  const { buildName, setBuildName, savedBuilds, setSavedBuilds } = props;
+
+  // On mount: onboarding and load user
+  useEffect(() => {
+    if (!localStorage.getItem("onboarded")) setShowOnboarding(true);
+    const u = localStorage.getItem("user");
+    if (u) setUser(JSON.parse(u));
+    const builds = localStorage.getItem("builds");
+    if (builds) setSavedBuilds(JSON.parse(builds));
+  }, []);
+
+  // Cost estimate
+  const totalCost = canvasParts.reduce((sum, p) => sum + (p.cost || 0), 0);
+
+  // Save build
+  function saveBuild() {
+    if (!buildName) return alert("Enter a name for your build");
+    const builds = JSON.parse(localStorage.getItem("builds") || "[]");
+    builds.push({ name: buildName, parts: canvasParts });
+    localStorage.setItem("builds", JSON.stringify(builds));
+    setSavedBuilds(builds);
+    alert("Build saved!");
+  }
+  // Load build
+  function loadBuild(parts) {
+    setCanvasParts(parts);
+  }
+  // Export as JSON
+  function exportJSON() {
+    const data = JSON.stringify(canvasParts, null, 2);
+    const blob = new Blob([data], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "drone-build.json";
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+  // Export as CSV
+  function exportCSV() {
+    const header = "Name,Type,Cost";
+    const rows = canvasParts.map(p => `${p.name},${p.id},${p.cost || 0}`);
+    const csv = [header, ...rows].join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "drone-build.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+  }
 
   // Helper: Analyze build
   function analyzeBuild() {
@@ -500,6 +553,14 @@ export default function Dashboard() {
     setCanvasParts(parts => parts.slice(0, index).concat(parts.slice(index + 1)));
   }
 
+  // Expose handlers for Navbar
+  useImperativeHandle(ref, () => ({
+    saveBuild,
+    loadBuild,
+    exportJSON,
+    exportCSV
+  }));
+
   return (
     <DndContext onDragEnd={handleDragEnd}>
       <div className="min-h-screen w-full flex flex-row bg-gradient-to-br from-blue-50 to-white overflow-x-auto">
@@ -521,7 +582,7 @@ export default function Dashboard() {
         {/* Main Playground */}
         <main className="flex-1 flex flex-col items-center justify-center p-8 relative min-w-[600px] max-w-[900px] mx-auto overflow-x-auto">
           {/* UI controls above playground */}
-          <div className="flex flex-wrap gap-3 mb-6">
+          <div className="flex flex-wrap gap-3 mb-6 items-center">
             <button
               className="px-6 py-3 rounded-lg bg-blue-600 text-white font-bold shadow hover:bg-blue-700 transition"
               onClick={() => { setCanvasParts([]); setWarning(""); }}
@@ -553,6 +614,7 @@ export default function Dashboard() {
               Surprise Me!
             </button>
             <button className="px-6 py-3 rounded-lg bg-purple-600 text-white font-bold shadow hover:bg-purple-700 transition" onClick={analyzeBuild}>Analyze Build</button>
+            <div className="ml-4 text-lg font-semibold text-gray-700">Total Cost: <span className="text-blue-700">${totalCost}</span></div>
           </div>
           <DroppableCanvas>
             <div className="w-full flex items-center justify-center">
@@ -646,4 +708,6 @@ export default function Dashboard() {
       )}
     </DndContext>
   );
-} 
+});
+
+export default Dashboard; 
