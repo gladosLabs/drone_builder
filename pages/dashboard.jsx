@@ -328,12 +328,16 @@ const Dashboard = forwardRef(function Dashboard(props, ref) {
 
   // On mount: onboarding and load user
   useEffect(() => {
-    if (!localStorage.getItem("onboarded")) setShowOnboarding(true);
     const u = localStorage.getItem("user");
     if (u) setUser(JSON.parse(u));
+    else setShowOnboarding(true);
     const builds = localStorage.getItem("builds");
     if (builds) setSavedBuilds(JSON.parse(builds));
   }, []);
+
+  function handleOnboardingDone() {
+    setShowOnboarding(false);
+  }
 
   // Cost estimate
   const totalCost = canvasParts.reduce((sum, p) => sum + (p.cost || 0), 0);
@@ -703,6 +707,20 @@ const Dashboard = forwardRef(function Dashboard(props, ref) {
               </>
             )}
             <button className="mt-6 px-4 py-2 rounded bg-blue-600 text-white font-bold" onClick={() => setShowAnalysis(false)}>Close</button>
+          </div>
+        </div>
+      )}
+      {showOnboarding && !user && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/30">
+          <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full flex flex-col items-center gap-6">
+            <div className="text-3xl font-extrabold text-blue-700 mb-2">Welcome to DroneBuilder!</div>
+            <div className="text-gray-700 text-lg text-center mb-2">
+              Build, visualize, and experiment with custom drones in 3D.<br/>
+              <span className="font-semibold text-blue-600">Drag parts</span> to the playground, <span className="font-semibold text-blue-600">analyze your build</span>, and <span className="font-semibold text-blue-600">save or export</span> your creations.<br/>
+              <br/>
+              <span className="text-blue-500">Get started by dragging a frame from the left!</span>
+            </div>
+            <button className="px-6 py-3 rounded-xl bg-blue-600 text-white font-bold text-lg shadow hover:bg-blue-700 transition" onClick={handleOnboardingDone}>Get Started</button>
           </div>
         </div>
       )}
