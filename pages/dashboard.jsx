@@ -65,9 +65,7 @@ const ESC_TYPES = [
 const OTHER_PARTS = [
   { id: "battery", name: "LiPo Battery", description: "Provides power to all the drone's parts.", emoji: "🔋", cost: 40, capacity: 2200 },
   { id: "camera", name: "Camera", description: "Lets you see from the drone's point of view.", emoji: "📷", cost: 50 },
-  { id: "controller", name: "Controller", description: "The brain of the drone. Controls flight and stability.", emoji: "🧠", cost: 60 },
-  { id: "gps", name: "GPS Module", description: "Helps the drone know where it is in the world.", emoji: "📡", cost: 30 },
-  { id: "prop-guard", name: "Propeller Guard", description: "Protects propellers and improves safety.", emoji: "🛡️", cost: 8 }
+  { id: "gps", name: "GPS Module", description: "Helps the drone know where it is in the world.", emoji: "📡", cost: 30 }
 ];
 
 const FC_TYPES = [
@@ -168,7 +166,7 @@ function Drone3D({ parts, onSelect, onRemove, hoveredPartId, setHoveredPartId })
     const angle = (i / armCount) * Math.PI * 2;
     return [Math.cos(angle) * 2, 0, Math.sin(angle) * 2];
   });
-  const guards = parts.filter((p) => p.id === "prop-guard");
+
   return (
     <Canvas camera={{ position: [0, 6, 10], fov: 50 }} style={{ width: 500, height: 400, background: 'transparent' }}>
       <ambientLight intensity={0.7} />
@@ -230,13 +228,7 @@ function Drone3D({ parts, onSelect, onRemove, hoveredPartId, setHoveredPartId })
             <boxGeometry args={[0.8, 0.03, 0.12]} />
             <meshStandardMaterial color="#4fc3f7" />
           </mesh>
-          {/* Propeller Guard (if present) */}
-          {guards[i] && (
-            <mesh position={[0, 0.1, 0]}>
-              <torusGeometry args={[0.55, 0.05, 16, 32]} />
-              <meshStandardMaterial color="#90caf9" opacity={0.5} transparent />
-            </mesh>
-          )}
+
         </group>
       ))}
       {/* Battery */}
@@ -493,20 +485,7 @@ export default function Dashboard() {
         setCanvasParts([...canvasParts, part]);
         return;
       }
-      // Propeller Guard logic
-      if (part.id === "prop-guard") {
-        if (!frame) {
-          setWarning("Add a frame first!");
-          return;
-        }
-        const guards = canvasParts.filter((p) => p.id === "prop-guard");
-        if (guards.length >= frame.arms) {
-          setWarning(`This frame supports only ${frame.arms} propeller guards.`);
-          return;
-        }
-        setCanvasParts([...canvasParts, part]);
-        return;
-      }
+
       // Other parts: only one of each
       if (canvasParts.some((p) => p.id === part.id)) {
         setWarning("This part is already added.");
