@@ -46,14 +46,14 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white flex flex-col items-center justify-start">
+    <div className="min-h-screen bg-white flex flex-col items-center justify-start">
       {/* Hero Section */}
       <section className="w-full max-w-4xl mx-auto text-center py-16 px-4">
-        <div className="inline-flex items-center px-3 py-1 mb-4 rounded-full bg-blue-100 text-blue-700 text-xs font-semibold uppercase tracking-wider shadow-sm">
+        <div className="inline-flex items-center px-4 py-2 mb-6 rounded-full bg-[#8b95c9] text-white text-sm font-semibold uppercase tracking-wider shadow-coolors">
           🚀 Launching on Product Hunt soon
         </div>
         <h1 className="text-5xl md:text-6xl font-extrabold text-gray-900 mb-6 leading-tight">
-          Build Your Perfect Drone <span className="text-blue-600">with AI</span>
+          Build Your Perfect Drone <span className="text-[#8b95c9]">with AI</span>
         </h1>
         <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-2xl mx-auto">
           DroneBuilder helps you design, customize, and optimize drones for any use case—powered by advanced AI recommendations.
@@ -61,11 +61,13 @@ export default function Home() {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10">
           <button
             onClick={handleStartBuilding}
-            className="px-8 py-4 rounded-xl bg-blue-600 text-white font-bold text-lg shadow-lg hover:bg-blue-700 transition"
+            className="px-8 py-4 rounded-xl btn-coolors-primary text-white font-bold text-lg shadow-coolors hover:shadow-coolors-hover transition-all duration-200"
           >
             {user ? 'Go to Dashboard' : 'Start Building'}
           </button>
-          <a href="#how-it-works" className="px-8 py-4 rounded-xl bg-white border border-blue-200 text-blue-700 font-semibold text-lg shadow hover:bg-blue-50 transition">How it works</a>
+          <a href="#how-it-works" className="px-8 py-4 rounded-xl btn-coolors-accent font-semibold text-lg shadow-coolors hover:shadow-coolors-hover transition-all duration-200">
+            How it works
+          </a>
         </div>
       </section>
 
@@ -73,26 +75,26 @@ export default function Home() {
       <section id="how-it-works" className="w-full max-w-4xl mx-auto py-16 px-4">
         <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">How DroneBuilder Works</h2>
         <div className="grid md:grid-cols-3 gap-8">
-          <div className="bg-white rounded-xl shadow p-6 flex flex-col items-center">
-            <div className="w-14 h-14 rounded-full bg-blue-100 flex items-center justify-center mb-4">
-              <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+          <div className="bg-white rounded-xl shadow-coolors p-6 flex flex-col items-center hover:shadow-coolors-hover transition-all duration-200 border border-[#d6edff]">
+            <div className="w-14 h-14 rounded-full bg-coolors-secondary flex items-center justify-center mb-4">
+              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
             </div>
-            <h3 className="font-bold text-lg mb-2">Describe Your Needs</h3>
-            <p className="text-gray-600">Tell us your use case, budget, and preferences. DroneBuilder supports everything from hobby to research and commercial drones.</p>
+            <h3 className="font-bold text-lg mb-2 text-gray-800">Describe Your Needs</h3>
+            <p className="text-gray-600 text-center">Tell us your use case, budget, and preferences. DroneBuilder supports everything from hobby to research and commercial drones.</p>
           </div>
-          <div className="bg-white rounded-xl shadow p-6 flex flex-col items-center">
-            <div className="w-14 h-14 rounded-full bg-blue-100 flex items-center justify-center mb-4">
-              <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17v-2a4 4 0 014-4h4a4 4 0 014 4v2" /></svg>
+          <div className="bg-white rounded-xl shadow-coolors p-6 flex flex-col items-center hover:shadow-coolors-hover transition-all duration-200 border border-[#d6edff]">
+            <div className="w-14 h-14 rounded-full bg-coolors-accent flex items-center justify-center mb-4">
+              <svg className="w-8 h-8 text-[#1f2937]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17v-2a4 4 0 014-4h4a4 4 0 014 4v2" /></svg>
             </div>
-            <h3 className="font-bold text-lg mb-2">Get AI-Powered Recommendations</h3>
-            <p className="text-gray-600">Our AI suggests the best parts, wiring, and configuration for your needs—instantly and accurately.</p>
+            <h3 className="font-bold text-lg mb-2 text-gray-800">Get AI-Powered Recommendations</h3>
+            <p className="text-gray-600 text-center">Our AI suggests the best parts, wiring, and configuration for your needs—instantly and accurately.</p>
           </div>
-          <div className="bg-white rounded-xl shadow p-6 flex flex-col items-center">
-            <div className="w-14 h-14 rounded-full bg-blue-100 flex items-center justify-center mb-4">
-              <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+          <div className="bg-white rounded-xl shadow-coolors p-6 flex flex-col items-center hover:shadow-coolors-hover transition-all duration-200 border border-[#d6edff]">
+            <div className="w-14 h-14 rounded-full bg-[#8b95c9] flex items-center justify-center mb-4">
+              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
             </div>
-            <h3 className="font-bold text-lg mb-2">Start Building</h3>
-            <p className="text-gray-600">View your custom build, get a parts list, and start building your drone with confidence.</p>
+            <h3 className="font-bold text-lg mb-2 text-gray-800">Start Building</h3>
+            <p className="text-gray-600 text-center">View your custom build, get a parts list, and start building your drone with confidence.</p>
           </div>
         </div>
       </section>
@@ -102,7 +104,7 @@ export default function Home() {
         <h2 className="text-3xl font-bold text-gray-900 mb-6">Ready to build your dream drone?</h2>
         <button
           onClick={handleStartBuilding}
-          className="px-10 py-4 rounded-xl bg-blue-600 text-white font-bold text-xl shadow-lg hover:bg-blue-700 transition"
+          className="px-10 py-4 rounded-xl btn-coolors-primary text-white font-bold text-xl shadow-coolors hover:shadow-coolors-hover transition-all duration-200"
         >
           {user ? 'Go to Dashboard' : 'Start Building Now'}
         </button>

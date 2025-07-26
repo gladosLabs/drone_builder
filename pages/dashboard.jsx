@@ -110,7 +110,7 @@ export default function Dashboard() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white">
+      <div className="min-h-screen bg-white">
         <div className="max-w-7xl mx-auto px-6 py-12">
           {/* Header */}
           <div className="text-center mb-16">
@@ -124,11 +124,11 @@ export default function Dashboard() {
           <div className="mb-16">
             <div
               onClick={handleCreateNewDesign}
-              className="max-w-2xl mx-auto bg-white rounded-2xl shadow-xl p-12 border-2 border-dashed border-blue-300 hover:border-blue-500 hover:shadow-2xl transition-all cursor-pointer group"
+              className="max-w-2xl mx-auto bg-white rounded-2xl shadow-coolors p-12 border-2 border-dashed border-[#8b95c9] hover:border-[#7a84b8] hover:shadow-coolors-hover transition-all cursor-pointer group"
             >
               <div className="text-center">
-                <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-blue-200 transition-colors">
-                  <svg className="w-10 h-10 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="w-20 h-20 bg-coolors-secondary rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-[#9ee4d1] transition-colors">
+                  <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                   </svg>
                 </div>
@@ -142,27 +142,27 @@ export default function Dashboard() {
           {builds.length > 0 && (
             <div className="mb-16">
               <div className="max-w-4xl mx-auto">
-                <div className="bg-white rounded-2xl shadow-xl p-8">
+                <div className="bg-white rounded-2xl shadow-coolors p-8 border border-[#d6edff]">
                   <h3 className="text-2xl font-bold text-gray-900 mb-8 text-center">Quick Stats</h3>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
                     <div className="text-center">
-                      <div className="text-3xl font-bold text-blue-600 mb-2">{builds.length}</div>
+                      <div className="text-3xl font-bold text-[#8b95c9] mb-2">{builds.length}</div>
                       <div className="text-gray-600 font-medium">Total Builds</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-3xl font-bold text-green-600 mb-2">
+                      <div className="text-3xl font-bold text-[#84dcc6] mb-2">
                         ${builds.reduce((sum, build) => sum + (build.total_cost || 0), 0).toFixed(0)}
                       </div>
                       <div className="text-gray-600 font-medium">Total Value</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-3xl font-bold text-purple-600 mb-2">
+                      <div className="text-3xl font-bold text-[#acd7ec] mb-2">
                         {builds.reduce((sum, build) => sum + (build.total_weight || 0), 0).toFixed(0)}g
                       </div>
                       <div className="text-gray-600 font-medium">Total Weight</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-3xl font-bold text-orange-600 mb-2">
+                      <div className="text-3xl font-bold text-[#7a84b8] mb-2">
                         {builds.reduce((sum, build) => sum + (build.flight_time || 0), 0)} min
                       </div>
                       <div className="text-gray-600 font-medium">Total Flight Time</div>
@@ -181,7 +181,7 @@ export default function Dashboard() {
                 <button
                   onClick={handleRefresh}
                   disabled={refreshing}
-                  className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors disabled:opacity-50"
+                  className="p-2 text-gray-600 hover:text-[#8b95c9] hover:bg-[#e8f4ff] rounded-full transition-colors disabled:opacity-50"
                   title="Refresh builds"
                 >
                   <svg 
@@ -196,23 +196,16 @@ export default function Dashboard() {
               </div>
               <p className="text-gray-600 text-lg">Your saved drone designs and configurations</p>
               <div className="mt-4">
-                <span className="inline-block px-4 py-2 bg-gray-100 text-gray-600 rounded-full text-sm font-medium">
+                <span className="inline-block px-4 py-2 bg-[#e8f4ff] text-[#8b95c9] rounded-full text-sm font-medium">
                   {refreshing ? 'Refreshing...' : `${builds.length} ${builds.length === 1 ? 'build' : 'builds'} total`}
                 </span>
-                {/* Temporary debug button */}
-                {/* <button
-                  onClick={testDatabaseConnection}
-                  className="ml-4 px-3 py-1 bg-red-100 text-red-600 rounded text-xs hover:bg-red-200"
-                >
-                  Debug DB
-                </button> */}
               </div>
             </div>
 
             {builds.length === 0 ? (
-              <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow-xl p-12 text-center">
-                <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <svg className="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow-coolors p-12 text-center border border-[#d6edff]">
+                <div className="w-20 h-20 bg-[#e8f4ff] rounded-full flex items-center justify-center mx-auto mb-6">
+                  <svg className="w-10 h-10 text-[#8b95c9]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
                 </div>
@@ -220,7 +213,7 @@ export default function Dashboard() {
                 <p className="text-gray-600 mb-6 text-lg">Create your first drone design to get started</p>
                 <button
                   onClick={handleCreateNewDesign}
-                  className="px-8 py-4 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition text-lg"
+                  className="px-8 py-4 btn-coolors-primary text-white font-semibold rounded-xl hover:shadow-coolors transition-all duration-200 text-lg"
                 >
                   Create Your First Build
                 </button>
@@ -228,21 +221,21 @@ export default function Dashboard() {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {builds.map((build) => (
-                  <div key={build.id} className="bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-shadow">
+                  <div key={build.id} className="bg-white rounded-2xl shadow-coolors overflow-hidden hover:shadow-coolors-hover transition-all duration-200 border border-[#d6edff]">
                     <div className="p-8">
                       <div className="flex items-center justify-between mb-6">
                         <h3 className="text-xl font-semibold text-gray-900 truncate">{build.name}</h3>
                         <div className="flex space-x-3">
                           <Link
                             href={`/playground?id=${build.id}`}
-                            className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                            className="text-[#8b95c9] hover:text-[#7a84b8] text-sm font-medium transition-colors"
                           >
                             Edit
                           </Link>
                           <button
                             onClick={() => handleDeleteBuild(build.id)}
                             disabled={deletingBuild === build.id}
-                            className="text-red-600 hover:text-red-800 text-sm font-medium disabled:opacity-50"
+                            className="text-red-600 hover:text-red-800 text-sm font-medium disabled:opacity-50 transition-colors"
                           >
                             {deletingBuild === build.id ? 'Deleting...' : 'Delete'}
                           </button>
@@ -250,21 +243,21 @@ export default function Dashboard() {
                       </div>
 
                       <div className="space-y-4 text-sm text-gray-600">
-                        <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                        <div className="flex justify-between items-center py-2 border-b border-[#e8f4ff]">
                           <span>Cost:</span>
-                          <span className="font-semibold text-lg">${build.total_cost || 0}</span>
+                          <span className="font-semibold text-lg text-[#84dcc6]">${build.total_cost || 0}</span>
                         </div>
-                        <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                        <div className="flex justify-between items-center py-2 border-b border-[#e8f4ff]">
                           <span>Weight:</span>
-                          <span className="font-semibold">{build.total_weight || 0}g</span>
+                          <span className="font-semibold text-[#acd7ec]">{build.total_weight || 0}g</span>
                         </div>
-                        <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                        <div className="flex justify-between items-center py-2 border-b border-[#e8f4ff]">
                           <span>Flight Time:</span>
-                          <span className="font-semibold">{build.flight_time || 0} min</span>
+                          <span className="font-semibold text-[#7a84b8]">{build.flight_time || 0} min</span>
                         </div>
                         <div className="flex justify-between items-center py-2">
                           <span>Parts:</span>
-                          <span className="font-semibold">{build.parts?.length || 0}</span>
+                          <span className="font-semibold text-[#8b95c9]">{build.parts?.length || 0}</span>
                         </div>
                       </div>
 
