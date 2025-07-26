@@ -1,9 +1,52 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { supabase } from "../lib/supabase";
 
 export default function Home() {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
+
+  useEffect(() => {
+    const checkUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+      setLoading(false);
+    };
+
+    checkUser();
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription?.unsubscribe();
+  }, []);
+
+  const handleStartBuilding = () => {
+    if (user) {
+      router.push('/dashboard');
+    } else {
+      router.push('/login');
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white flex flex-col items-center justify-start pt-16">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white flex flex-col items-center justify-start">
       {/* Hero Section */}
       <section className="w-full max-w-4xl mx-auto text-center py-16 px-4">
         <div className="inline-flex items-center px-3 py-1 mb-4 rounded-full bg-blue-100 text-blue-700 text-xs font-semibold uppercase tracking-wider shadow-sm">
@@ -16,16 +59,14 @@ export default function Home() {
           DroneBuilder helps you design, customize, and optimize drones for any use case—powered by advanced AI recommendations.
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10">
-          <a href="#build" className="px-8 py-4 rounded-xl bg-blue-600 text-white font-bold text-lg shadow-lg hover:bg-blue-700 transition">Start Building</a>
+          <button
+            onClick={handleStartBuilding}
+            className="px-8 py-4 rounded-xl bg-blue-600 text-white font-bold text-lg shadow-lg hover:bg-blue-700 transition"
+          >
+            {user ? 'Go to Dashboard' : 'Start Building'}
+          </button>
           <a href="#how-it-works" className="px-8 py-4 rounded-xl bg-white border border-blue-200 text-blue-700 font-semibold text-lg shadow hover:bg-blue-50 transition">How it works</a>
         </div>
-        {/* Product Screenshot/Illustration */}
-        {/* <div className="flex justify-center mb-12">
-          <div className="rounded-2xl shadow-2xl overflow-hidden border border-gray-100 bg-white">
-            <Image src="/drone-landing-hero.png" alt="DroneBuilder Screenshot" width={700} height={350} className="object-cover" />
-          </div>
-        </div> */}
-        {/* Social Proof */}
       </section>
 
       {/* How It Works Section */}
@@ -59,37 +100,13 @@ export default function Home() {
       {/* Call to Action */}
       <section className="w-full max-w-2xl mx-auto text-center py-16 px-4">
         <h2 className="text-3xl font-bold text-gray-900 mb-6">Ready to build your dream drone?</h2>
-        <a href="#build" className="px-10 py-4 rounded-xl bg-blue-600 text-white font-bold text-xl shadow-lg hover:bg-blue-700 transition">Start Building Now</a>
+        <button
+          onClick={handleStartBuilding}
+          className="px-10 py-4 rounded-xl bg-blue-600 text-white font-bold text-xl shadow-lg hover:bg-blue-700 transition"
+        >
+          {user ? 'Go to Dashboard' : 'Start Building Now'}
+        </button>
       </section>
-
-      {/* Testimonials */}
-      {/* <section className="w-full max-w-4xl mx-auto py-16 px-4">
-        <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">What our users say</h2>
-        <div className="grid md:grid-cols-2 gap-8">
-          <div className="bg-white rounded-xl shadow p-6">
-            <p className="text-gray-700 mb-4">“DroneBuilder made it so easy to design my first FPV drone. The AI recommendations were spot on!”</p>
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-blue-200 flex items-center justify-center font-bold text-blue-700">A</div>
-              <div>
-                <div className="font-semibold text-gray-900">Alex P.</div>
-                <div className="text-xs text-gray-500">FPV Enthusiast</div>
-              </div>
-            </div>
-          </div>
-          <div className="bg-white rounded-xl shadow p-6">
-            <p className="text-gray-700 mb-4">“I saved hours of research and avoided costly mistakes. Highly recommend for anyone building drones!”</p>
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-blue-200 flex items-center justify-center font-bold text-blue-700">S</div>
-              <div>
-                <div className="font-semibold text-gray-900">Sara K.</div>
-                <div className="text-xs text-gray-500">STEM Teacher</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section> */}
-
-      {/* Anchor for Build Form (keep your existing form here) */}
       <div id="build" />
     </div>
   );
