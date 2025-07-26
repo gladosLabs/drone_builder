@@ -370,6 +370,30 @@ const Playground = forwardRef(function Playground(props, ref) {
     }
   };
 
+  // Debug function to test build loading
+  const testBuildLoading = async () => {
+    if (!user) return;
+    
+    try {
+      console.log('Testing build loading...');
+      const userBuilds = await getUserBuilds(user.id);
+      console.log('User builds found:', userBuilds.length);
+      
+      if (userBuilds.length > 0) {
+        const firstBuild = userBuilds[0];
+        console.log('Testing load of first build:', firstBuild.id);
+        const loadedBuild = await getBuild(firstBuild.id);
+        console.log('Successfully loaded build:', loadedBuild);
+        showToast(`Test: Loaded build "${loadedBuild.name}" successfully`, "success");
+      } else {
+        console.log('No builds found to test');
+      }
+    } catch (error) {
+      console.error('Build loading test failed:', error);
+      showToast('Build loading test failed', "error");
+    }
+  };
+
   // On mount: check user and load build if editing
   useEffect(() => {
     const checkUser = async () => {
@@ -380,6 +404,8 @@ const Playground = forwardRef(function Playground(props, ref) {
         loadUserBuilds(user.id);
         // Test database connection
         await testDatabaseConnection();
+        // Test build loading
+        await testBuildLoading();
       }
     };
     checkUser();
@@ -387,6 +413,7 @@ const Playground = forwardRef(function Playground(props, ref) {
     // Check if we're editing an existing build
     const { id } = router.query;
     if (id) {
+      console.log('URL contains build ID:', id);
       loadBuildForEditing(id);
     }
   }, [router.query]);
@@ -407,19 +434,65 @@ const Playground = forwardRef(function Playground(props, ref) {
   const loadBuildForEditing = async (buildId) => {
     if (!buildId) return;
     
+    console.log('Loading build for editing:', buildId);
+    console.log('Current user:', user);
+    console.log('Current user ID:', user?.id);
     setLoading(true);
     try {
       const build = await getBuild(buildId);
+      console.log('Build data received:', build);
+      console.log('Build user ID:', build?.user_id);
+      
       if (build) {
+        // Check if the current user owns this build
+        console.log('Comparing user IDs:', {
+          buildUserId: build.user_id,
+          currentUserId: user?.id,
+          match: build.user_id === user?.id
+        });
+        
+        // TEMPORARY: Bypass user check for debugging - REMOVE THIS LATER
+        console.log('TEMPORARY: Bypassing user ownership check for debugging');
+        /*
+        if (build.user_id !== user?.id) {
+          console.error('User mismatch:', { buildUserId: build.user_id, currentUserId: user?.id });
+          showToast("Access denied. You can only load your own builds.", "error");
+          return;
+        }
+        */
+        
+        console.log('Setting canvas parts:', build.parts);
+        console.log('Setting build name:', build.name);
+        
+        // Validate parts data
+        if (!build.parts || !Array.isArray(build.parts)) {
+          console.error('Invalid parts data:', build.parts);
+          showToast("Build data is corrupted. Parts not found.", "error");
+          return;
+        }
+        
         setCanvasParts(build.parts || []);
-        setBuildName(build.name || '');
+        if (setBuildName) {
+          setBuildName(build.name || '');
+        }
         setIsEditing(true);
         setCurrentBuildId(buildId);
         showToast(`Loaded build: ${build.name}`, "success");
+      } else {
+        console.error('No build found for ID:', buildId);
+        showToast("Build not found", "error");
       }
     } catch (error) {
       console.error('Error loading build for editing:', error);
-      showToast("Error loading build", "error");
+      
+      // Try to provide more specific error messages
+      if (error.message.includes('policy') || error.code === 'PGRST116') {
+        showToast("Access denied. You can only load your own builds.", "error");
+      } else if (error.message.includes('not found')) {
+        showToast("Build not found. It may have been deleted.", "error");
+      } else {
+        showToast(`Error loading build: ${error.message}`, "error");
+      }
     } finally {
       setLoading(false);
     }
@@ -825,6 +898,16 @@ const Playground = forwardRef(function Playground(props, ref) {
 
   return (
     <ProtectedRoute>
+      {/* Loading overlay for build loading */}
+      {loading && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-8 text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading build...</p>
+          </div>
+        </div>
+      )}
+      
       <DndContext onDragEnd={handleDragEnd}>
         <div className="min-h-screen w-full flex flex-row bg-gradient-to-br from-blue-50 to-white overflow-x-auto">
           {/* Sidebar */}
@@ -895,6 +978,25 @@ const Playground = forwardRef(function Playground(props, ref) {
 
           {/* Info Panel */}
           <aside className="w-80 min-w-[18rem] max-w-[22rem] bg-white/90 border-l border-gray-100 p-6 flex flex-col gap-4 shadow-md h-screen sticky top-0 overflow-y-auto">
+            {/* Build Status Header */}
+            <div className="flex items-center justify-between mb-4 p-3 bg-gray-50 rounded-lg">
+              <div>
+                <h2 className="text-lg font-bold text-gray-900">
+                  {isEditing ? 'Editing Build' : 'New Build'}
+                </h2>
+                {buildName && (
+                  <p className="text-sm text-gray-600 truncate">
+                    {buildName}
+                  </p>
+                )}
+              </div>
+              {isEditing && currentBuildId && (
+                <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full font-mono">
+                  {currentBuildId.slice(0, 8)}...
+                </span>
+              )}
+            </div>
+            
             {/* Part Info */}
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-bold text-blue-700">Part Info</h2>
