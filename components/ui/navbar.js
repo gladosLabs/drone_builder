@@ -236,6 +236,7 @@ export default function Navbar({ onSave, onLoad, onExportJSON, onExportCSV, save
         <div className="hidden md:flex items-center space-x-6 text-base font-medium">
           <Link href="/" className="hover:text-[#8b95c9] transition-colors">Home</Link>
           <Link href="/dashboard" className="hover:text-[#8b95c9] transition-colors">Dashboard</Link>
+          <Link href="/docs" className="hover:text-[#8b95c9] transition-colors">Docs</Link>
           <Link href="/help" className="hover:text-[#8b95c9] transition-colors">Help</Link>
           <button 
             onClick={() => setShowPricingModal(true)}

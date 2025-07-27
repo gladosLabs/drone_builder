@@ -101,13 +101,21 @@ export default function Home() {
 
       {/* Call to Action */}
       <section className="w-full max-w-2xl mx-auto text-center py-16 px-4">
-        <h2 className="text-3xl font-bold text-gray-900 mb-6">Ready to build your dream drone?</h2>
-        <button
-          onClick={handleStartBuilding}
-          className="px-10 py-4 rounded-xl btn-coolors-primary text-white font-bold text-xl shadow-coolors hover:shadow-coolors-hover transition-all duration-200"
-        >
-          {user ? 'Go to Dashboard' : 'Start Building Now'}
-        </button>
+        <h2 className="text-3xl font-bold text-gray-900 mb-6">Need help in building your drone? Read our docs or contact us</h2>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <Link
+            href="/docs"
+            className="px-8 py-4 rounded-xl btn-coolors-primary text-white font-bold text-lg shadow-coolors hover:shadow-coolors-hover transition-all duration-200"
+          >
+            Go to Docs
+          </Link>
+          <Link
+            href="/help"
+            className="px-8 py-4 rounded-xl btn-coolors-accent text-white font-bold text-lg shadow-coolors hover:shadow-coolors-hover transition-all duration-200"
+          >
+            Contact Us
+          </Link>
+        </div>
       </section>
       <div id="build" />
     </div>
