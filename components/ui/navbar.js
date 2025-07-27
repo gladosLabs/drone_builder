@@ -6,7 +6,7 @@ import { supabase } from "../../lib/supabase";
 export default function Navbar({ onSave, onLoad, onExportJSON, onExportCSV, savedBuilds, setBuildName, buildName, onDeleteBuild }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [showLoadModal, setShowLoadModal] = useState(false);
-  const [showPricingModal, setShowPricingModal] = useState(false);
+
   const [toast, setToast] = useState("");
   const [toastType, setToastType] = useState("info"); // "success", "error", "info", "warning"
   const [showLogin, setShowLogin] = useState(false);
@@ -18,61 +18,9 @@ export default function Navbar({ onSave, onLoad, onExportJSON, onExportCSV, save
   const buttonRef = useRef();
   const router = useRouter();
 
-  const pricingPlans = [
-    {
-      name: 'Free',
-      price: '$0',
-      period: 'forever',
-      features: [
-        'Basic email support (48h response)',
-        'Access to FAQ and resources',
-        'Community forum access',
-        'Basic build templates'
-      ],
-      buttonText: 'Continue with Free',
-      buttonStyle: 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-    },
-    {
-      name: 'Pro',
-      price: '$19',
-      period: 'per month',
-      features: [
-        'Priority email support (24h response)',
-        'One-on-one video consultations (2/month)',
-        'Custom build recommendations',
-        'Advanced troubleshooting',
-        'Performance optimization tips',
-        'Unlimited build storage',
-        'Export builds to PDF'
-      ],
-      buttonText: 'Start Pro Trial',
-      buttonStyle: 'btn-coolors-primary',
-      popular: true
-    },
-    {
-      name: 'Unlimited',
-      price: '$49',
-      period: 'per month',
-      features: [
-        'Everything in Pro',
-        'Unlimited video consultations',
-        'Priority phone support',
-        'Custom drone design service',
-        'Advanced analytics & insights',
-        'Team collaboration tools',
-        'API access for integrations',
-        'White-label solutions'
-      ],
-      buttonText: 'Start Unlimited Trial',
-      buttonStyle: 'btn-coolors-secondary'
-    }
-  ];
 
-  const handlePricingSelect = (plan) => {
-    setShowPricingModal(false);
-    // Here you would typically redirect to payment or update subscription
-    console.log(`Selected plan: ${plan}`);
-  };
+
+
 
   // On mount, check for user
   useEffect(() => {
@@ -238,12 +186,9 @@ export default function Navbar({ onSave, onLoad, onExportJSON, onExportCSV, save
           <Link href="/dashboard" className="hover:text-[#8b95c9] transition-colors">Dashboard</Link>
           <Link href="/docs" className="hover:text-[#8b95c9] transition-colors">Docs</Link>
           <Link href="/help" className="hover:text-[#8b95c9] transition-colors">Help</Link>
-          <button 
-            onClick={() => setShowPricingModal(true)}
-            className="hover:text-[#8b95c9] transition-colors cursor-pointer"
-          >
+          <Link href="/pricing" className="hover:text-[#8b95c9] transition-colors">
             Pricing
-          </button>
+          </Link>
         </div>
         
         {/* Right side - Auth & Save/Export */}
@@ -387,66 +332,7 @@ export default function Navbar({ onSave, onLoad, onExportJSON, onExportCSV, save
           </div>
         )}
 
-        {/* Pricing Modal */}
-                  {showPricingModal && (
-            <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/50 backdrop-blur-sm">
-              <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-4xl w-full mx-4 max-h-[100vh] overflow-y-auto relative mt-[46rem]">
-              <div className="text-center mb-8">
-                <h2 className="text-3xl font-bold text-gray-900 mb-2">Choose Your Expert Support Plan</h2>
-                <p className="text-gray-600">Get the level of expert support that matches your needs</p>
-              </div>
 
-              <div className="grid md:grid-cols-3 gap-6">
-                {pricingPlans.map((plan, index) => (
-                  <div key={index} className={`relative bg-white rounded-xl border-2 p-6 ${plan.popular ? 'border-[#8b95c9] shadow-coolors' : 'border-[#d6edff]'}`}>
-                    {plan.popular && (
-                      <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                        <span className="bg-[#8b95c9] text-white px-4 py-1 rounded-full text-sm font-semibold">
-                          Most Popular
-                        </span>
-                      </div>
-                    )}
-                    
-                    <div className="text-center mb-6">
-                      <h3 className="text-xl font-bold text-gray-900 mb-2">{plan.name}</h3>
-                      <div className="mb-2">
-                        <span className="text-3xl font-bold text-gray-900">{plan.price}</span>
-                        <span className="text-gray-600 ml-1">{plan.period}</span>
-                      </div>
-                    </div>
-
-                    <ul className="space-y-3 mb-8">
-                      {plan.features.map((feature, featureIndex) => (
-                        <li key={featureIndex} className="flex items-start">
-                          <svg className="w-5 h-5 text-[#84dcc6] mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                          </svg>
-                          <span className="text-sm text-gray-600">{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-
-                    <button
-                      onClick={() => handlePricingSelect(plan.name)}
-                      className={`w-full py-3 px-6 rounded-lg font-semibold transition-all duration-200 ${plan.buttonStyle}`}
-                    >
-                      {plan.buttonText}
-                    </button>
-                  </div>
-                ))}
-              </div>
-
-              <div className="text-center mt-8">
-                <button
-                  onClick={() => setShowPricingModal(false)}
-                  className="text-gray-500 hover:text-gray-700 font-medium"
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
 
         {/* Toast/confirmation */}
         {toast && (
