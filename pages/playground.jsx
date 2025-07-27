@@ -418,6 +418,149 @@ const Playground = forwardRef(function Playground(props, ref) {
     }
   }, [router.query]);
 
+  // Handle AI-generated specs from dashboard
+  useEffect(() => {
+    const aiSpecs = localStorage.getItem('ai_generated_specs');
+    const aiPrompt = localStorage.getItem('ai_prompt');
+    
+    if (aiSpecs && aiPrompt) {
+      try {
+        const specs = JSON.parse(aiSpecs);
+        console.log('AI specs found:', specs);
+        console.log('AI prompt:', aiPrompt);
+        
+        // Apply AI specs to the playground
+        applyAiSpecs(specs, aiPrompt);
+        
+        // Clear the localStorage
+        localStorage.removeItem('ai_generated_specs');
+        localStorage.removeItem('ai_prompt');
+      } catch (error) {
+        console.error('Error parsing AI specs:', error);
+      }
+    }
+  }, []);
+
+  // Function to apply AI-generated specs
+  const applyAiSpecs = (specs, prompt) => {
+    const newParts = [];
+    
+    // Map AI specs to actual parts
+    if (specs.frame) {
+      // Find matching frame based on AI recommendation
+      const frameType = specs.frame.type.toLowerCase();
+      let framePart = null;
+      
+      if (frameType.includes('racing') || frameType.includes('5-inch')) {
+        framePart = FRAME_TYPES.find(f => f.id === 'frame-x');
+      } else if (frameType.includes('cinewhoop')) {
+        framePart = FRAME_TYPES.find(f => f.id === 'frame-cinewhoop');
+      } else if (frameType.includes('tinywhoop')) {
+        framePart = FRAME_TYPES.find(f => f.id === 'frame-tinywhoop');
+      } else if (frameType.includes('hex')) {
+        framePart = FRAME_TYPES.find(f => f.id === 'frame-hex');
+      } else if (frameType.includes('octo')) {
+        framePart = FRAME_TYPES.find(f => f.id === 'frame-octo');
+      } else {
+        framePart = FRAME_TYPES.find(f => f.id === 'frame-h');
+      }
+      
+      if (framePart) {
+        newParts.push(framePart);
+      }
+    }
+    
+    if (specs.motors) {
+      const motorType = specs.motors.type.toLowerCase();
+      let motorPart = null;
+      
+      if (motorType.includes('racing') || motorType.includes('2207')) {
+        motorPart = MOTOR_TYPES.find(m => m.id === 'motor-racing');
+      } else if (motorType.includes('cinewhoop')) {
+        motorPart = MOTOR_TYPES.find(m => m.id === 'motor-cinewhoop');
+      } else if (motorType.includes('heavy') || motorType.includes('lift')) {
+        motorPart = MOTOR_TYPES.find(m => m.id === 'motor-heavy');
+      } else {
+        motorPart = MOTOR_TYPES.find(m => m.id === 'motor-standard');
+      }
+      
+      if (motorPart) {
+        newParts.push(motorPart);
+      }
+    }
+    
+    if (specs.escs) {
+      const escType = specs.escs.type.toLowerCase();
+      let escPart = null;
+      
+      if (escType.includes('racing') || escType.includes('40a')) {
+        escPart = ESC_TYPES.find(e => e.id === 'esc-racing');
+      } else {
+        escPart = ESC_TYPES.find(e => e.id === 'esc-standard');
+      }
+      
+      if (escPart) {
+        newParts.push(escPart);
+      }
+    }
+    
+    if (specs.flightController) {
+      const fcType = specs.flightController.type.toLowerCase();
+      let fcPart = null;
+      
+      if (fcType.includes('pixhawk')) {
+        fcPart = FC_TYPES.find(f => f.id === 'fc-pixhawk');
+      } else if (fcType.includes('orange') || fcType.includes('cube')) {
+        fcPart = FC_TYPES.find(f => f.id === 'fc-orangecube');
+      } else if (fcType.includes('matek')) {
+        fcPart = FC_TYPES.find(f => f.id === 'fc-matek');
+      } else if (fcType.includes('betaflight') || fcType.includes('f7')) {
+        fcPart = FC_TYPES.find(f => f.id === 'fc-betaflight');
+      } else {
+        fcPart = FC_TYPES.find(f => f.id === 'fc-matek');
+      }
+      
+      if (fcPart) {
+        newParts.push(fcPart);
+      }
+    }
+    
+    if (specs.props) {
+      const propType = specs.props.type.toLowerCase();
+      let propPart = null;
+      
+      if (propType.includes('racing') || propType.includes('tri-blade')) {
+        propPart = PROPELLER_TYPES.find(p => p.id === 'prop-racing');
+      } else if (propType.includes('cinewhoop') || propType.includes('ducted')) {
+        propPart = PROPELLER_TYPES.find(p => p.id === 'prop-cinewhoop');
+      } else {
+        propPart = PROPELLER_TYPES.find(p => p.id === 'prop-standard');
+      }
+      
+      if (propPart) {
+        newParts.push(propPart);
+      }
+    }
+    
+    // Add battery and camera
+    const batteryPart = OTHER_PARTS.find(p => p.id === 'battery');
+    const cameraPart = OTHER_PARTS.find(p => p.id === 'camera');
+    
+    if (batteryPart) newParts.push(batteryPart);
+    if (cameraPart) newParts.push(cameraPart);
+    
+    // Apply the parts to the canvas
+    setCanvasParts(newParts);
+    
+    // Set build name based on AI prompt
+    const buildName = `AI Generated - ${prompt.substring(0, 30)}...`;
+    if (setBuildName) {
+      setBuildName(buildName);
+    }
+    
+    showToast(`Applied AI-generated specifications for: "${prompt}"`, "success");
+  };
+
   const loadUserBuilds = async (userId) => {
     try {
       const builds = await getUserBuilds(userId);
