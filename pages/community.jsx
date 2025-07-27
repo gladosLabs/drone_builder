@@ -1,60 +1,22 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { supabase } from '../lib/supabase';
+import { getDiscussions, createDiscussion, getCategories } from '../lib/community';
 
 export default function Community() {
   const [activeTab, setActiveTab] = useState('discussions');
   const [user, setUser] = useState(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [discussions, setDiscussions] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState('all');
   const [formData, setFormData] = useState({
     title: '',
     content: '',
     category: 'general',
     tags: []
   });
-
-  // Mock data - in real app, this would come from Supabase
-  const discussions = [
-    {
-      id: 1,
-      title: "Best motors for 5-inch racing drone?",
-      author: "DroneRacer123",
-      replies: 15,
-      views: 234,
-      category: "racing",
-      lastActivity: "2 hours ago",
-      tags: ["motors", "racing", "5-inch"]
-    },
-    {
-      id: 2,
-      title: "Help with PID tuning for smooth cinematic shots",
-      author: "CinematicFlyer",
-      replies: 8,
-      views: 156,
-      category: "cinematic",
-      lastActivity: "5 hours ago",
-      tags: ["pid", "cinematic", "tuning"]
-    },
-    {
-      id: 3,
-      title: "Long range build recommendations",
-      author: "ExplorerDude",
-      replies: 23,
-      views: 445,
-      category: "long-range",
-      lastActivity: "1 day ago",
-      tags: ["long-range", "build", "recommendations"]
-    },
-    {
-      id: 4,
-      title: "First time building - need guidance",
-      author: "NewBuilder",
-      replies: 12,
-      views: 189,
-      category: "beginner",
-      lastActivity: "3 hours ago",
-      tags: ["beginner", "first-build", "help"]
-    }
-  ];
 
   const experts = [
     {
@@ -132,13 +94,56 @@ export default function Community() {
     }
   ];
 
-  const categories = [
-    { name: "All", count: discussions.length },
-    { name: "Racing", count: discussions.filter(d => d.category === "racing").length },
-    { name: "Cinematic", count: discussions.filter(d => d.category === "cinematic").length },
-    { name: "Long Range", count: discussions.filter(d => d.category === "long-range").length },
-    { name: "Beginner", count: discussions.filter(d => d.category === "beginner").length }
-  ];
+  // Load discussions and categories on component mount
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        setLoading(true);
+        
+        const discussionsData = await getDiscussions(selectedCategory === 'all' ? null : selectedCategory);
+        const categoriesData = await getCategories();
+        
+        setDiscussions(discussionsData || []);
+        setCategories(categoriesData || []);
+      } catch (error) {
+        console.error('Error loading data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
+  }, [selectedCategory]);
+
+  // Handle category selection
+  const handleCategorySelect = (categoryName) => {
+    setSelectedCategory(categoryName);
+  };
+
+  // Force reload categories
+  const reloadCategories = async () => {
+    try {
+      console.log('Reloading categories...');
+      const categoriesData = await getCategories();
+      console.log('New categories data:', categoriesData);
+      setCategories(categoriesData || []);
+    } catch (error) {
+      console.error('Error reloading categories:', error);
+    }
+  };
+
+  // Check user authentication
+  useEffect(() => {
+    const checkUser = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        setUser(user);
+      } catch (error) {
+        console.error('Error checking user:', error);
+      }
+    };
+    checkUser();
+  }, []);
 
   const availableCategories = [
     { value: 'general', label: 'General Discussion' },
@@ -193,10 +198,15 @@ export default function Community() {
     }
 
     try {
-      // Here you would typically save to Supabase
-      console.log('Creating post:', formData);
+      // Create the discussion in Supabase
+      await createDiscussion(
+        formData.title.trim(),
+        formData.content.trim(),
+        formData.category,
+        formData.tags
+      );
       
-      // For now, just close the form
+      // Close the form and reset
       setShowCreateForm(false);
       setFormData({
         title: '',
@@ -204,6 +214,10 @@ export default function Community() {
         category: 'general',
         tags: []
       });
+      
+      // Reload discussions to show the new post
+      const discussionsData = await getDiscussions(selectedCategory === 'all' ? null : selectedCategory);
+      setDiscussions(discussionsData);
       
       alert('Post created successfully!');
     } catch (error) {
@@ -254,54 +268,112 @@ export default function Community() {
         {activeTab === 'discussions' && (
           <div className="space-y-6">
             {/* Categories */}
-            <div className="flex space-x-2 overflow-x-auto pb-2">
-              {categories.map((category) => (
+            {/* Category Filter */}
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex space-x-2 overflow-x-auto pb-2">
                 <button
-                  key={category.name}
-                  className="px-4 py-2 bg-white rounded-full text-sm font-medium text-gray-700 hover:bg-[#d6edff] transition-colors whitespace-nowrap border border-[#d6edff] shadow-coolors"
+                  onClick={() => handleCategorySelect('all')}
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-colors whitespace-nowrap border shadow-coolors ${
+                    selectedCategory === 'all'
+                      ? 'bg-[#8b95c9] text-white border-[#8b95c9]'
+                      : 'bg-white text-gray-700 border-[#d6edff] hover:bg-[#d6edff]'
+                  }`}
                 >
-                  {category.name} ({category.count})
+                  All Discussions
                 </button>
-              ))}
+                {categories.map((category) => (
+                  <button
+                    key={category.name}
+                    onClick={() => handleCategorySelect(category.name)}
+                    className={`px-4 py-2 rounded-full text-sm font-medium transition-colors whitespace-nowrap border shadow-coolors ${
+                      selectedCategory === category.name
+                        ? 'bg-[#8b95c9] text-white border-[#8b95c9]'
+                        : 'bg-white text-gray-700 border-[#d6edff] hover:bg-[#d6edff]'
+                    }`}
+                  >
+                    {category.icon} {category.name}
+                  </button>
+                ))}
+              </div>
+              <button
+                onClick={reloadCategories}
+                className="px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-[#d6edff] rounded-lg transition-colors"
+                title="Refresh categories"
+              >
+                🔄 Refresh
+              </button>
             </div>
 
-            {/* Discussions */}
-            <div className="bg-white rounded-lg shadow-coolors border border-[#d6edff]">
-              {discussions.map((discussion) => (
-                <div key={discussion.id} className="p-6 border-b border-[#d6edff] last:border-b-0 hover:bg-[#d6edff]/20 transition-colors">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                        <Link href={`/community/discussion/${discussion.id}`} className="hover:text-[#8b95c9]">
-                          {discussion.title}
-                        </Link>
-                      </h3>
-                      <div className="flex items-center space-x-4 text-sm text-gray-500 mb-3">
-                        <span>By {discussion.author}</span>
-                        <span>{discussion.replies} replies</span>
-                        <span>{discussion.views} views</span>
-                        <span>{discussion.lastActivity}</span>
-                      </div>
-                      <div className="flex space-x-2">
-                        {discussion.tags.map((tag) => (
-                          <span
-                            key={tag}
-                            className="px-2 py-1 bg-[#84dcc6] text-gray-800 text-xs rounded-full"
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                    <div className="ml-4 text-right">
-                      <span className="inline-block px-3 py-1 bg-[#acd7ec] text-gray-800 text-xs rounded-full">
-                        {discussion.category}
-                      </span>
-                    </div>
-                  </div>
+
+            {/* Loading State */}
+            {loading && (
+              <div className="bg-white rounded-lg shadow-coolors border border-[#d6edff] p-8">
+                <div className="flex items-center justify-center">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#8b95c9]"></div>
+                  <span className="ml-3 text-gray-600">Loading discussions...</span>
                 </div>
-              ))}
-            </div>
+              </div>
+            )}
+
+            {/* Discussions */}
+            {!loading && (
+              <div className="bg-white rounded-lg shadow-coolors border border-[#d6edff]">
+                {discussions.length === 0 ? (
+                  <div className="p-8 text-center">
+                    <p className="text-gray-500">No discussions found in this category.</p>
+                    <button 
+                      onClick={() => setShowCreateForm(true)}
+                      className="mt-4 px-6 py-3 btn-coolors-primary text-white rounded-lg hover:shadow-coolors-hover transition-all duration-200"
+                    >
+                      Start the first discussion
+                    </button>
+                  </div>
+                ) : (
+                  discussions.map((discussion) => (
+                    <div key={discussion.id} className="p-6 border-b border-[#d6edff] last:border-b-0 hover:bg-[#d6edff]/20 transition-colors">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-2 mb-2">
+                            {discussion.is_pinned && (
+                              <span className="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full">
+                                📌 Pinned
+                              </span>
+                            )}
+                            <h3 className="text-lg font-semibold text-gray-900">
+                              <Link href={`/community/discussion/${discussion.id}`} className="hover:text-[#8b95c9]">
+                                {discussion.title}
+                              </Link>
+                            </h3>
+                          </div>
+                          <div className="flex items-center space-x-4 text-sm text-gray-500 mb-3">
+                            <span>By {discussion.author_name || 'Anonymous'}</span>
+                            <span>{discussion.reply_count || 0} replies</span>
+                            <span>{discussion.views || 0} views</span>
+                            <span>{discussion.vote_count > 0 ? `+${discussion.vote_count}` : discussion.vote_count} votes</span>
+                            <span>{new Date(discussion.created_at).toLocaleDateString()}</span>
+                          </div>
+                          <div className="flex space-x-2">
+                            {discussion.tags && discussion.tags.map((tag) => (
+                              <span
+                                key={tag}
+                                className="px-2 py-1 bg-[#84dcc6] text-gray-800 text-xs rounded-full"
+                              >
+                                {tag}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                        <div className="ml-4 text-right">
+                          <span className="inline-block px-3 py-1 bg-[#acd7ec] text-gray-800 text-xs rounded-full capitalize">
+                            {discussion.category}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
 
             {/* Start New Discussion */}
             <div className="bg-white rounded-lg shadow-coolors p-6 border border-[#d6edff]">
