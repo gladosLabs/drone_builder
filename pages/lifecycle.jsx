@@ -72,6 +72,7 @@ export default function DroneLifecycle() {
   const [userBuilds, setUserBuilds] = useState([]);
   const [selectedBuildId, setSelectedBuildId] = useState(null);
   const [showBuildSelector, setShowBuildSelector] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const checkUser = async () => {
@@ -1394,19 +1395,30 @@ export default function DroneLifecycle() {
   ];
 
   const renderDesignStage = () => (
-    <div className="space-y-8">
+    <div className="space-y-12">
       {/* Build Selector */}
-      <div className="bg-white rounded-lg shadow-coolors p-6 border border-[#d6edff]">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-xl font-bold text-gray-900">Select Build</h3>
-          <div className="flex items-center space-x-2">
+      <div className="bg-gradient-to-br from-white to-[#84dcc6]/5 rounded-2xl shadow-xl border border-gray-100 p-8">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h3 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-[#8b95c9] bg-clip-text text-transparent mb-2">
+              Select Build
+            </h3>
+            <p className="text-gray-600">Choose a build to optimize and enhance</p>
+          </div>
+          <div className="flex items-center space-x-3">
             <button
               onClick={() => setShowBuildSelector(true)}
-              className="px-4 py-2 bg-[#8b95c9] text-white rounded-lg text-sm hover:bg-[#7a85b8] transition-colors"
+              className="px-6 py-3 bg-gradient-to-r from-[#8b95c9] to-[#84dcc6] text-white rounded-xl text-sm font-medium hover:shadow-lg transform hover:scale-105 transition-all duration-200"
             >
+              <svg className="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+              </svg>
               {currentBuild ? 'Change Build' : 'Select Build'}
             </button>
-            <Link href="/playground" className="px-4 py-2 bg-[#84dcc6] text-white rounded-lg text-sm hover:bg-[#73cbb5] transition-colors">
+            <Link href="/playground" className="px-6 py-3 bg-white text-[#84dcc6] border-2 border-[#84dcc6] rounded-xl text-sm font-medium hover:bg-[#84dcc6] hover:text-white transform hover:scale-105 transition-all duration-200">
+              <svg className="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              </svg>
               Create New Build
             </Link>
           </div>
@@ -1540,32 +1552,67 @@ export default function DroneLifecycle() {
 
       {/* Advanced Design Tools */}
       <div className="grid md:grid-cols-2 gap-8">
-        <div className="bg-white rounded-lg shadow-coolors p-6 border border-[#d6edff]">
-          <h3 className="text-xl font-bold text-gray-900 mb-4">Advanced Component Selection</h3>
+        <div className="bg-gradient-to-br from-white to-[#84dcc6]/5 rounded-2xl shadow-xl border border-gray-100 p-8">
+          <div className="mb-6">
+            <h3 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-[#84dcc6] bg-clip-text text-transparent mb-2">
+              AI-Powered Optimization
+            </h3>
+            <p className="text-gray-600">Intelligent component selection and performance optimization</p>
+          </div>
           <div className="space-y-4">
-            <div className="flex items-center justify-between p-3 bg-[#d6edff]/20 rounded-lg">
-              <span className="font-medium">Battery Optimization</span>
+            <div className="flex items-center justify-between p-4 bg-white/60 rounded-xl border border-gray-100 hover:shadow-md transition-all duration-200">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-[#84dcc6] to-[#73cbb5] rounded-lg flex items-center justify-center">
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                </div>
+                <div>
+                  <span className="font-semibold text-gray-900">Battery Optimization</span>
+                  <p className="text-sm text-gray-600">Optimize power and flight time</p>
+                </div>
+              </div>
               <button 
                 onClick={optimizeBattery}
-                className="px-3 py-1 bg-[#84dcc6] text-white rounded-lg text-sm hover:bg-[#73cbb5] transition-colors"
+                className="px-4 py-2 bg-gradient-to-r from-[#84dcc6] to-[#73cbb5] text-white rounded-lg text-sm font-medium hover:shadow-lg transform hover:scale-105 transition-all duration-200"
               >
                 Configure
               </button>
             </div>
-            <div className="flex items-center justify-between p-3 bg-[#d6edff]/20 rounded-lg">
-              <span className="font-medium">Power Distribution</span>
+            <div className="flex items-center justify-between p-4 bg-white/60 rounded-xl border border-gray-100 hover:shadow-md transition-all duration-200">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-[#8b95c9] to-[#7a85b8] rounded-lg flex items-center justify-center">
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <div>
+                  <span className="font-semibold text-gray-900">Power Distribution</span>
+                  <p className="text-sm text-gray-600">Optimize ESC and PDB selection</p>
+                </div>
+              </div>
               <button 
                 onClick={optimizePowerDistribution}
-                className="px-3 py-1 bg-[#84dcc6] text-white rounded-lg text-sm hover:bg-[#73cbb5] transition-colors"
+                className="px-4 py-2 bg-gradient-to-r from-[#8b95c9] to-[#7a85b8] text-white rounded-lg text-sm font-medium hover:shadow-lg transform hover:scale-105 transition-all duration-200"
               >
                 Configure
               </button>
             </div>
-            <div className="flex items-center justify-between p-3 bg-[#d6edff]/20 rounded-lg">
-              <span className="font-medium">Flight Envelope Analysis</span>
+            <div className="flex items-center justify-between p-4 bg-white/60 rounded-xl border border-gray-100 hover:shadow-md transition-all duration-200">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-[#acd7ec] to-[#9bc6db] rounded-lg flex items-center justify-center">
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  </svg>
+                </div>
+                <div>
+                  <span className="font-semibold text-gray-900">Flight Envelope Analysis</span>
+                  <p className="text-sm text-gray-600">Analyze performance capabilities</p>
+                </div>
+              </div>
               <button 
                 onClick={analyzeFlightEnvelope}
-                className="px-3 py-1 bg-[#84dcc6] text-white rounded-lg text-sm hover:bg-[#73cbb5] transition-colors"
+                className="px-4 py-2 bg-gradient-to-r from-[#acd7ec] to-[#9bc6db] text-white rounded-lg text-sm font-medium hover:shadow-lg transform hover:scale-105 transition-all duration-200"
               >
                 Analyze
               </button>
@@ -1574,32 +1621,67 @@ export default function DroneLifecycle() {
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-coolors p-6 border border-[#d6edff]">
-          <h3 className="text-xl font-bold text-gray-900 mb-4">CAD Export & Collaboration</h3>
+        <div className="bg-gradient-to-br from-white to-[#8b95c9]/5 rounded-2xl shadow-xl border border-gray-100 p-8">
+          <div className="mb-6">
+            <h3 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-[#8b95c9] bg-clip-text text-transparent mb-2">
+              CAD Export & Collaboration
+            </h3>
+            <p className="text-gray-600">Export designs and collaborate with your team</p>
+          </div>
           <div className="space-y-4">
-            <div className="flex items-center justify-between p-3 bg-[#d6edff]/20 rounded-lg">
-              <span className="font-medium">Export STL Files</span>
+            <div className="flex items-center justify-between p-4 bg-white/60 rounded-xl border border-gray-100 hover:shadow-md transition-all duration-200">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-gray-400 to-gray-500 rounded-lg flex items-center justify-center">
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                </div>
+                <div>
+                  <span className="font-semibold text-gray-900">Export STL Files</span>
+                  <p className="text-sm text-gray-600">3D printable models</p>
+                </div>
+              </div>
               <button 
-                className="px-3 py-1 bg-[#8b95c9] text-white rounded-lg text-sm cursor-not-allowed opacity-60"
+                className="px-4 py-2 bg-gray-400 text-white rounded-lg text-sm font-medium cursor-not-allowed opacity-60"
                 title="Coming Soon - STL export functionality will be available in the next update"
               >
                 Export
               </button>
             </div>
-            <div className="flex items-center justify-between p-3 bg-[#d6edff]/20 rounded-lg">
-              <span className="font-medium">Team Collaboration</span>
+            <div className="flex items-center justify-between p-4 bg-white/60 rounded-xl border border-gray-100 hover:shadow-md transition-all duration-200">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-[#8b95c9] to-[#7a85b8] rounded-lg flex items-center justify-center">
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                </div>
+                <div>
+                  <span className="font-semibold text-gray-900">Team Collaboration</span>
+                  <p className="text-sm text-gray-600">Share and collaborate</p>
+                </div>
+              </div>
               <button 
                 onClick={initializeTeamCollaboration}
-                className="px-3 py-1 bg-[#8b95c9] text-white rounded-lg text-sm hover:bg-[#7a85b8] transition-colors"
+                className="px-4 py-2 bg-gradient-to-r from-[#8b95c9] to-[#7a85b8] text-white rounded-lg text-sm font-medium hover:shadow-lg transform hover:scale-105 transition-all duration-200"
               >
                 Manage
               </button>
             </div>
-            <div className="flex items-center justify-between p-3 bg-[#d6edff]/20 rounded-lg">
-              <span className="font-medium">Version Control</span>
+            <div className="flex items-center justify-between p-4 bg-white/60 rounded-xl border border-gray-100 hover:shadow-md transition-all duration-200">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-[#acd7ec] to-[#9bc6db] rounded-lg flex items-center justify-center">
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <div>
+                  <span className="font-semibold text-gray-900">Version Control</span>
+                  <p className="text-sm text-gray-600">Track design changes</p>
+                </div>
+              </div>
               <button 
                 onClick={initializeVersionControl}
-                className="px-3 py-1 bg-[#8b95c9] text-white rounded-lg text-sm hover:bg-[#7a85b8] transition-colors"
+                className="px-4 py-2 bg-gradient-to-r from-[#acd7ec] to-[#9bc6db] text-white rounded-lg text-sm font-medium hover:shadow-lg transform hover:scale-105 transition-all duration-200"
               >
                 Manage
               </button>
@@ -1609,32 +1691,57 @@ export default function DroneLifecycle() {
       </div>
 
       {/* Flight Analysis Dashboard */}
-      <div className="bg-white rounded-lg shadow-coolors p-6 border border-[#d6edff]">
-        <h3 className="text-xl font-bold text-gray-900 mb-4">Flight Performance Analysis</h3>
-        <div className="grid md:grid-cols-4 gap-4">
-          <div className="text-center p-4 bg-[#84dcc6]/20 rounded-lg">
-            <div className="text-2xl font-bold text-[#84dcc6]">
+      <div className="bg-gradient-to-br from-white to-[#acd7ec]/5 rounded-2xl shadow-xl border border-gray-100 p-8">
+        <div className="mb-6">
+          <h3 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-[#acd7ec] bg-clip-text text-transparent mb-2">
+            Flight Performance Analysis
+          </h3>
+          <p className="text-gray-600">Real-time performance metrics and insights</p>
+        </div>
+        <div className="grid md:grid-cols-4 gap-6">
+          <div className="text-center p-6 bg-gradient-to-br from-[#84dcc6]/10 to-[#84dcc6]/20 rounded-2xl border border-[#84dcc6]/20 hover:shadow-lg transition-all duration-200">
+            <div className="w-12 h-12 bg-gradient-to-br from-[#84dcc6] to-[#73cbb5] rounded-xl flex items-center justify-center mx-auto mb-3">
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div className="text-3xl font-bold text-[#84dcc6] mb-1">
               {buildAnalysis?.estimatedFlightTime || '0'}
             </div>
-            <div className="text-sm text-gray-600">Flight Time (min)</div>
+            <div className="text-sm text-gray-600 font-medium">Flight Time (min)</div>
           </div>
-          <div className="text-center p-4 bg-[#8b95c9]/20 rounded-lg">
-            <div className="text-2xl font-bold text-[#8b95c9]">
+          <div className="text-center p-6 bg-gradient-to-br from-[#8b95c9]/10 to-[#8b95c9]/20 rounded-2xl border border-[#8b95c9]/20 hover:shadow-lg transition-all duration-200">
+            <div className="w-12 h-12 bg-gradient-to-br from-[#8b95c9] to-[#7a85b8] rounded-xl flex items-center justify-center mx-auto mb-3">
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
+              </svg>
+            </div>
+            <div className="text-3xl font-bold text-[#8b95c9] mb-1">
               {buildAnalysis?.payloadCapacity ? (buildAnalysis.payloadCapacity / 1000).toFixed(1) : '0'}
             </div>
-            <div className="text-sm text-gray-600">Payload (kg)</div>
+            <div className="text-sm text-gray-600 font-medium">Payload (kg)</div>
           </div>
-          <div className="text-center p-4 bg-[#acd7ec]/20 rounded-lg">
-            <div className="text-2xl font-bold text-[#acd7ec]">
+          <div className="text-center p-6 bg-gradient-to-br from-[#acd7ec]/10 to-[#acd7ec]/20 rounded-2xl border border-[#acd7ec]/20 hover:shadow-lg transition-all duration-200">
+            <div className="w-12 h-12 bg-gradient-to-br from-[#acd7ec] to-[#9bc6db] rounded-xl flex items-center justify-center mx-auto mb-3">
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+            <div className="text-3xl font-bold text-[#acd7ec] mb-1">
               {buildAnalysis?.estimatedSpeed ? Math.round(buildAnalysis.estimatedSpeed) : '0'}
             </div>
-            <div className="text-sm text-gray-600">Speed (km/h)</div>
+            <div className="text-sm text-gray-600 font-medium">Speed (km/h)</div>
           </div>
-          <div className="text-center p-4 bg-[#d6edff]/20 rounded-lg">
-            <div className="text-2xl font-bold text-[#d6edff]">
+          <div className="text-center p-6 bg-gradient-to-br from-[#d6edff]/10 to-[#d6edff]/20 rounded-2xl border border-[#d6edff]/20 hover:shadow-lg transition-all duration-200">
+            <div className="w-12 h-12 bg-gradient-to-br from-[#d6edff] to-[#c5dcf0] rounded-xl flex items-center justify-center mx-auto mb-3">
+              <svg className="w-6 h-6 text-[#8b95c9]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+              </svg>
+            </div>
+            <div className="text-3xl font-bold text-[#8b95c9] mb-1">
               {buildAnalysis?.estimatedRange ? buildAnalysis.estimatedRange.toFixed(1) : '0'}
             </div>
-            <div className="text-sm text-gray-600">Range (km)</div>
+            <div className="text-sm text-gray-600 font-medium">Range (km)</div>
           </div>
         </div>
         
@@ -2175,53 +2282,112 @@ export default function DroneLifecycle() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-white relative">
+        {/* Loading Overlay */}
+        {isLoading && (
+          <div className="fixed inset-0 bg-white/80 backdrop-blur-sm z-50 flex items-center justify-center">
+            <div className="text-center">
+              <div className="w-16 h-16 border-4 border-[#84dcc6] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+              <p className="text-gray-600 font-medium">Optimizing your drone...</p>
+            </div>
+          </div>
+        )}
       {/* Header */}
-      <div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="text-center">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">Full-Stack Drone Lifecycle</h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Complete drone development platform from design to deployment and maintenance
+      <div className="relative overflow-hidden bg-gradient-to-br from-[#84dcc6]/10 via-white to-[#8b95c9]/10">
+        <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          <div className="text-center relative z-10">
+            <div className="inline-flex items-center px-4 py-2 bg-[#84dcc6]/20 text-[#84dcc6] rounded-full text-sm font-medium mb-6">
+              <span className="w-2 h-2 bg-[#84dcc6] rounded-full mr-2 animate-pulse"></span>
+              Figma for Drone Builders
+            </div>
+            <h1 className="text-5xl font-bold bg-gradient-to-r from-gray-900 via-[#8b95c9] to-[#84dcc6] bg-clip-text text-transparent mb-6">
+              Full-Stack Drone Lifecycle
+            </h1>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8 leading-relaxed">
+              The complete drone development platform that transforms ideas into flying machines. 
+              From concept to deployment, we've got every stage covered.
             </p>
-            <p className="text-lg text-gray-500 mt-2">
-              Professional-grade tools for every stage of drone development
-            </p>
+            <div className="flex items-center justify-center space-x-8 text-sm text-gray-500">
+              <div className="flex items-center">
+                <svg className="w-4 h-4 mr-2 text-[#84dcc6]" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+                AI-Powered Optimization
+              </div>
+              <div className="flex items-center">
+                <svg className="w-4 h-4 mr-2 text-[#84dcc6]" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+                Real-time Collaboration
+              </div>
+              <div className="flex items-center">
+                <svg className="w-4 h-4 mr-2 text-[#84dcc6]" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+                Enterprise Ready
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Lifecycle Navigation */}
-        <div className="flex flex-wrap gap-2 mb-8">
-          {lifecycleStages.map((stage) => (
-            <button
-              key={stage.id}
-              onClick={() => setActiveStage(stage.id)}
-              className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
-                activeStage === stage.id
-                  ? 'bg-[#8b95c9] text-white shadow-coolors'
-                  : 'bg-white text-gray-700 hover:bg-[#d6edff] border border-[#d6edff] shadow-coolors'
-              }`}
-            >
-              {stage.title}
-            </button>
-          ))}
+        <div className="relative mb-12">
+          <div className="flex items-center justify-center">
+            <div className="flex bg-white rounded-2xl p-2 shadow-lg border border-gray-100">
+              {lifecycleStages.map((stage, index) => (
+                <div key={stage.id} className="relative">
+                  <button
+                    onClick={() => setActiveStage(stage.id)}
+                    className={`px-6 py-4 rounded-xl font-medium transition-all duration-300 flex items-center space-x-2 ${
+                      activeStage === stage.id
+                        ? 'bg-gradient-to-r from-[#8b95c9] to-[#84dcc6] text-white shadow-lg transform scale-105'
+                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                    }`}
+                  >
+                    <span className="text-lg">{stage.title.split(' ')[1]}</span>
+                    <span className="text-sm opacity-80">{stage.title.split(' ')[0]}</span>
+                  </button>
+
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
 
         {/* Stage Description */}
-        <div className="bg-white rounded-lg shadow-coolors p-6 border border-[#d6edff] mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">
-            {lifecycleStages.find(s => s.id === activeStage)?.title}
-          </h2>
-          <p className="text-gray-600 mb-4">
-            {lifecycleStages.find(s => s.id === activeStage)?.description}
-          </p>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
+        <div className="bg-gradient-to-br from-white to-[#84dcc6]/5 rounded-2xl shadow-xl border border-gray-100 p-8 mb-12 animate-fade-in-up">
+          <div className="flex items-start justify-between mb-6">
+            <div>
+              <h2 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-[#8b95c9] bg-clip-text text-transparent mb-3">
+                {lifecycleStages.find(s => s.id === activeStage)?.title}
+              </h2>
+              <p className="text-lg text-gray-600 leading-relaxed max-w-3xl">
+                {lifecycleStages.find(s => s.id === activeStage)?.description}
+              </p>
+            </div>
+            <div className="hidden lg:block">
+              <div className="w-16 h-16 bg-gradient-to-br from-[#84dcc6] to-[#8b95c9] rounded-2xl flex items-center justify-center">
+                <span className="text-2xl text-white">
+                  {activeStage === 'design' ? '🧠' : 
+                   activeStage === 'simulate' ? '📊' : 
+                   activeStage === 'build' ? '🛠️' : 
+                   activeStage === 'deploy' ? '🕹️' : '🚀'}
+                </span>
+              </div>
+            </div>
+          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {lifecycleStages.find(s => s.id === activeStage)?.features.map((feature, index) => (
-              <div key={index} className="flex items-center text-sm text-gray-700">
-                <span className="mr-2">✓</span>
-                {feature}
+              <div key={index} className="flex items-start space-x-3 p-3 bg-white/60 rounded-xl border border-gray-100">
+                <div className="flex-shrink-0 w-6 h-6 bg-[#84dcc6] rounded-full flex items-center justify-center mt-0.5">
+                  <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <span className="text-sm text-gray-700 font-medium">{feature}</span>
               </div>
             ))}
           </div>

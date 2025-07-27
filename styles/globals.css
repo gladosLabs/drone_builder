@@ -1,3 +1,66 @@
 @tailwind base;
 @tailwind components;
-@tailwind utilities; 
+@tailwind utilities;
+
+/* Custom CSS for enhanced UX */
+.bg-grid-pattern {
+  background-image: 
+    linear-gradient(rgba(139, 149, 201, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(139, 149, 201, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Smooth animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* Enhanced shadows */
+.shadow-coolors {
+  box-shadow: 0 4px 6px -1px rgba(139, 149, 201, 0.1), 0 2px 4px -1px rgba(132, 220, 198, 0.06);
+}
+
+/* Gradient text support */
+.bg-clip-text {
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Hover effects */
+.hover-lift {
+  transition: transform 0.2s ease-in-out;
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #84dcc6, #8b95c9);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, #73cbb5, #7a85b8);
+} 

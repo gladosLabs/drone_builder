@@ -67,21 +67,21 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8">
+    <div className="min-h-screen bg-gradient-to-br from-[#84dcc6]/10 via-white to-[#8b95c9]/10 flex items-center justify-center p-4">
+      <div className="max-w-md w-full bg-gradient-to-br from-white to-[#84dcc6]/5 rounded-2xl shadow-xl p-8 border border-gray-100">
         <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center space-x-2 font-bold text-2xl text-blue-700 mb-4">
-            <span className="inline-block w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-700 rounded-lg flex items-center justify-center">
-              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          <Link href="/" className="inline-flex items-center space-x-3 font-bold text-2xl text-[#8b95c9] mb-6">
+            <span className="inline-block w-12 h-12 bg-gradient-to-br from-[#8b95c9] to-[#84dcc6] rounded-xl flex items-center justify-center">
+              <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </span>
-            <span>DroneBuilder</span>
+            <span className="bg-gradient-to-r from-[#8b95c9] to-[#84dcc6] bg-clip-text text-transparent">DroneBuilder</span>
           </Link>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-[#8b95c9] bg-clip-text text-transparent mb-3">
             {isSignUp ? 'Create Account' : 'Welcome Back'}
           </h1>
-          <p className="text-gray-600">
+          <p className="text-gray-600 text-lg">
             {isSignUp ? 'Start building amazing drones today' : 'Sign in to continue building'}
           </p>
         </div>
@@ -95,7 +95,7 @@ export default function Login() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#84dcc6] focus:border-transparent transition-all duration-200"
               placeholder="Enter your email"
               required
             />
@@ -109,7 +109,7 @@ export default function Login() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#84dcc6] focus:border-transparent transition-all duration-200"
               placeholder="Enter your password"
               required
             />
@@ -128,7 +128,7 @@ export default function Login() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition"
+            className="w-full bg-gradient-to-r from-[#8b95c9] to-[#84dcc6] text-white py-4 px-6 rounded-xl font-semibold hover:shadow-lg transform hover:scale-105 focus:ring-2 focus:ring-[#84dcc6] focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none transition-all duration-200"
           >
             {loading ? 'Loading...' : (isSignUp ? 'Create Account' : 'Sign In')}
           </button>
@@ -173,12 +173,12 @@ export default function Login() {
         </div>
 
         <div className="mt-6 text-center">
-          <button
-            onClick={() => setIsSignUp(!isSignUp)}
-            className="text-blue-600 hover:text-blue-500 font-medium"
-          >
-            {isSignUp ? 'Already have an account? Sign in' : "Don't have an account? Sign up"}
-          </button>
+                      <button
+              onClick={() => setIsSignUp(!isSignUp)}
+              className="text-[#8b95c9] hover:text-[#7a84b8] font-medium transition-colors duration-200"
+            >
+              {isSignUp ? 'Already have an account? Sign in' : "Don't have an account? Sign up"}
+            </button>
         </div>
 
         {!isSignUp && (

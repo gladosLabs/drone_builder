@@ -169,19 +169,21 @@ export default function Dashboard() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
         <div className="max-w-7xl mx-auto px-6 py-12">
           {/* Header */}
           <div className="text-center mb-16">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">My Dashboard</h1>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-6">
+            <h1 className="text-5xl font-bold bg-gradient-to-r from-gray-900 to-[#8b95c9] bg-clip-text text-transparent mb-4">
+              My Dashboard
+            </h1>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-8">
               Welcome back! Create and manage your drone designs with ease.
             </p>
             <div className="flex items-center justify-center space-x-4">
               <button
                 onClick={handleRefresh}
                 disabled={refreshing}
-                className="px-4 py-2 bg-[#8b95c9] text-white rounded-lg hover:bg-[#7a84b8] transition-colors disabled:opacity-50 flex items-center space-x-2"
+                className="px-6 py-3 bg-gradient-to-r from-[#8b95c9] to-[#7a84b8] text-white rounded-xl font-medium hover:shadow-lg transform hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:transform-none flex items-center space-x-2"
                 title="Refresh builds"
               >
                 <svg 
@@ -196,7 +198,7 @@ export default function Dashboard() {
               </button>
               <button
                 onClick={syncOptimizationsToDatabase}
-                className="px-4 py-2 bg-[#84dcc6] text-white rounded-lg hover:bg-[#73cbb5] transition-colors flex items-center space-x-2"
+                className="px-6 py-3 bg-gradient-to-r from-[#84dcc6] to-[#73cbb5] text-white rounded-xl font-medium hover:shadow-lg transform hover:scale-105 transition-all duration-200 flex items-center space-x-2"
                 title="Sync optimizations to database"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -211,15 +213,15 @@ export default function Dashboard() {
           <div className="mb-16">
             <div
               onClick={handleCreateNewDesign}
-              className="max-w-2xl mx-auto bg-white rounded-2xl shadow-coolors p-12 border-2 border-dashed border-[#8b95c9] hover:border-[#7a84b8] hover:shadow-coolors-hover transition-all cursor-pointer group"
+              className="max-w-2xl mx-auto bg-gradient-to-br from-white to-[#84dcc6]/5 rounded-2xl shadow-xl p-12 border-2 border-dashed border-[#8b95c9] hover:border-[#7a84b8] hover:shadow-2xl transform hover:scale-105 transition-all duration-300 cursor-pointer group"
             >
               <div className="text-center">
-                <div className="w-20 h-20 bg-coolors-secondary rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-[#9ee4d1] transition-colors">
-                  <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="w-24 h-24 bg-gradient-to-br from-[#84dcc6] to-[#73cbb5] rounded-2xl flex items-center justify-center mx-auto mb-8 group-hover:scale-110 transition-transform duration-300">
+                  <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                   </svg>
                 </div>
-                <h2 className="text-2xl font-semibold text-gray-900 mb-3">Create New Design</h2>
+                <h2 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-[#8b95c9] bg-clip-text text-transparent mb-4">Create New Design</h2>
                 <p className="text-gray-600 text-lg">Start building your next drone masterpiece</p>
               </div>
             </div>
@@ -229,27 +231,47 @@ export default function Dashboard() {
           {builds.length > 0 && (
             <div className="mb-16">
               <div className="max-w-4xl mx-auto">
-                <div className="bg-white rounded-2xl shadow-coolors p-8 border border-[#d6edff]">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-8 text-center">Quick Stats</h3>
+                <div className="bg-gradient-to-br from-white to-[#8b95c9]/5 rounded-2xl shadow-xl p-8 border border-gray-100">
+                  <h3 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-[#8b95c9] bg-clip-text text-transparent mb-8 text-center">Quick Stats</h3>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-                    <div className="text-center">
-                      <div className="text-3xl font-bold text-[#8b95c9] mb-2">{builds.length}</div>
+                    <div className="text-center p-6 bg-white/60 rounded-xl border border-gray-100 hover:shadow-lg transition-all duration-200">
+                      <div className="w-12 h-12 bg-gradient-to-br from-[#8b95c9] to-[#7a84b8] rounded-xl flex items-center justify-center mx-auto mb-3">
+                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                        </svg>
+                      </div>
+                      <div className="text-3xl font-bold text-[#8b95c9] mb-1">{builds.length}</div>
                       <div className="text-gray-600 font-medium">Total Builds</div>
                     </div>
-                    <div className="text-center">
-                      <div className="text-3xl font-bold text-[#84dcc6] mb-2">
+                    <div className="text-center p-6 bg-white/60 rounded-xl border border-gray-100 hover:shadow-lg transition-all duration-200">
+                      <div className="w-12 h-12 bg-gradient-to-br from-[#84dcc6] to-[#73cbb5] rounded-xl flex items-center justify-center mx-auto mb-3">
+                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                        </svg>
+                      </div>
+                      <div className="text-3xl font-bold text-[#84dcc6] mb-1">
                         ${builds.reduce((sum, build) => sum + (build.total_cost || 0), 0).toFixed(0)}
                       </div>
                       <div className="text-gray-600 font-medium">Total Value</div>
                     </div>
-                    <div className="text-center">
-                      <div className="text-3xl font-bold text-[#acd7ec] mb-2">
+                    <div className="text-center p-6 bg-white/60 rounded-xl border border-gray-100 hover:shadow-lg transition-all duration-200">
+                      <div className="w-12 h-12 bg-gradient-to-br from-[#acd7ec] to-[#9bc6db] rounded-xl flex items-center justify-center mx-auto mb-3">
+                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
+                        </svg>
+                      </div>
+                      <div className="text-3xl font-bold text-[#acd7ec] mb-1">
                         {builds.reduce((sum, build) => sum + (build.total_weight || 0), 0).toFixed(0)}g
                       </div>
                       <div className="text-gray-600 font-medium">Total Weight</div>
                     </div>
-                    <div className="text-center">
-                      <div className="text-3xl font-bold text-[#7a84b8] mb-2">
+                    <div className="text-center p-6 bg-white/60 rounded-xl border border-gray-100 hover:shadow-lg transition-all duration-200">
+                      <div className="w-12 h-12 bg-gradient-to-br from-[#7a84b8] to-[#6a74a8] rounded-xl flex items-center justify-center mx-auto mb-3">
+                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                      </div>
+                      <div className="text-3xl font-bold text-[#7a84b8] mb-1">
                         {builds.reduce((sum, build) => sum + (build.flight_time || 0), 0)} min
                       </div>
                       <div className="text-gray-600 font-medium">Total Flight Time</div>
