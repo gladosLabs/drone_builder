@@ -49,9 +49,9 @@ export default function Home() {
     <div className="min-h-screen bg-white flex flex-col items-center justify-start">
       {/* Hero Section */}
       <section className="w-full max-w-4xl mx-auto text-center py-16 px-4">
-        <div className="inline-flex items-center px-4 py-2 mb-6 rounded-full bg-[#8b95c9] text-white text-sm font-semibold uppercase tracking-wider shadow-coolors">
+        {/* <div className="inline-flex items-center px-4 py-2 mb-6 rounded-full bg-[#8b95c9] text-white text-sm font-semibold uppercase tracking-wider shadow-coolors">
           🚀 Launching on Product Hunt soon
-        </div>
+        </div> */}
         <h1 className="text-5xl md:text-6xl font-extrabold text-gray-900 mb-6 leading-tight">
           Build Your Perfect Drone <span className="text-[#8b95c9]">with AI</span>
         </h1>

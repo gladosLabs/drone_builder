@@ -220,53 +220,195 @@ export default function Dashboard() {
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {builds.map((build) => (
-                  <div key={build.id} className="bg-white rounded-2xl shadow-coolors overflow-hidden hover:shadow-coolors-hover transition-all duration-200 border border-[#d6edff]">
-                    <div className="p-8">
-                      <div className="flex items-center justify-between mb-6">
-                        <h3 className="text-xl font-semibold text-gray-900 truncate">{build.name}</h3>
-                        <div className="flex space-x-3">
-                          <Link
-                            href={`/playground?id=${build.id}`}
-                            className="text-[#8b95c9] hover:text-[#7a84b8] text-sm font-medium transition-colors"
-                          >
-                            Edit
-                          </Link>
-                          <button
-                            onClick={() => handleDeleteBuild(build.id)}
-                            disabled={deletingBuild === build.id}
-                            className="text-red-600 hover:text-red-800 text-sm font-medium disabled:opacity-50 transition-colors"
-                          >
-                            {deletingBuild === build.id ? 'Deleting...' : 'Delete'}
-                          </button>
+                {builds.map((build) => {
+                  // Get the frame to determine drone type and arm count
+                  const frame = build.parts?.find(p => p.id?.startsWith('frame-'));
+                  const motors = build.parts?.filter(p => p.id?.startsWith('motor-')) || [];
+                  const props = build.parts?.filter(p => p.id?.startsWith('prop-')) || [];
+                  const battery = build.parts?.find(p => p.id === 'battery');
+                  const camera = build.parts?.find(p => p.id === 'camera');
+                  const fc = build.parts?.find(p => p.id?.startsWith('fc-'));
+                  const companion = build.parts?.find(p => p.id?.startsWith('companion-'));
+                  
+                  const armCount = frame?.arms || 4;
+                  const hasFrame = !!frame;
+                  
+                  return (
+                    <div key={build.id} className="bg-white rounded-2xl shadow-coolors overflow-hidden hover:shadow-coolors-hover transition-all duration-200 border border-[#d6edff]">
+                      {/* Drone Image Section */}
+                      <div className="h-48 bg-gradient-to-br from-[#d6edff] to-[#e8f4ff] flex items-center justify-center relative overflow-hidden">
+                        {hasFrame ? (
+                          <div className="w-32 h-32 relative">
+                            {/* Frame - different shapes based on type */}
+                            <div className="absolute inset-0 flex items-center justify-center">
+                              {frame.id === 'frame-x' && (
+                                <div className="w-24 h-24 border-4 border-[#8b95c9] rounded-lg transform rotate-45"></div>
+                              )}
+                              {frame.id === 'frame-h' && (
+                                <div className="w-24 h-16 border-4 border-[#8b95c9] rounded-lg"></div>
+                              )}
+                              {frame.id === 'frame-cinewhoop' && (
+                                <div className="w-28 h-28 border-4 border-[#8b95c9] rounded-full"></div>
+                              )}
+                              {frame.id === 'frame-tinywhoop' && (
+                                <div className="w-20 h-20 border-4 border-[#8b95c9] rounded-lg transform rotate-45"></div>
+                              )}
+                              {frame.id === 'frame-hex' && (
+                                <div className="w-28 h-28 border-4 border-[#8b95c9] transform rotate-30" style={{ clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)' }}></div>
+                              )}
+                              {frame.id === 'frame-octo' && (
+                                <div className="w-32 h-32 border-4 border-[#8b95c9] transform rotate-22.5" style={{ clipPath: 'polygon(50% 0%, 100% 12.5%, 100% 37.5%, 100% 62.5%, 100% 87.5%, 50% 100%, 0% 87.5%, 0% 62.5%, 0% 37.5%, 0% 12.5%)' }}></div>
+                              )}
+                            </div>
+                            
+                            {/* Arms based on frame type */}
+                            {Array.from({ length: armCount }, (_, i) => {
+                              const angle = (i / armCount) * Math.PI * 2;
+                              const x = Math.cos(angle) * 12;
+                              const y = Math.sin(angle) * 12;
+                              return (
+                                <div
+                                  key={i}
+                                  className="absolute w-1 h-8 bg-[#8b95c9] transform -translate-x-1/2 -translate-y-1/2"
+                                  style={{
+                                    left: `calc(50% + ${x}px)`,
+                                    top: `calc(50% + ${y}px)`,
+                                    transform: `translate(-50%, -50%) rotate(${angle}rad)`
+                                  }}
+                                ></div>
+                              );
+                            })}
+                            
+                            {/* Motors */}
+                            {motors.map((motor, i) => {
+                              const angle = (i / armCount) * Math.PI * 2;
+                              const x = Math.cos(angle) * 12;
+                              const y = Math.sin(angle) * 12;
+                              return (
+                                <div
+                                  key={i}
+                                  className="absolute w-6 h-6 bg-[#84dcc6] rounded-full flex items-center justify-center transform -translate-x-1/2 -translate-y-1/2"
+                                  style={{
+                                    left: `calc(50% + ${x}px)`,
+                                    top: `calc(50% + ${y}px)`
+                                  }}
+                                >
+                                  <div className="w-4 h-4 bg-white rounded-full"></div>
+                                </div>
+                              );
+                            })}
+                            
+                            {/* Propellers */}
+                            {props.map((prop, i) => {
+                              const angle = (i / armCount) * Math.PI * 2;
+                              const x = Math.cos(angle) * 12;
+                              const y = Math.sin(angle) * 12;
+                              return (
+                                <div
+                                  key={i}
+                                  className="absolute w-8 h-8 bg-[#acd7ec] rounded-full flex items-center justify-center transform -translate-x-1/2 -translate-y-1/2"
+                                  style={{
+                                    left: `calc(50% + ${x}px)`,
+                                    top: `calc(50% + ${y}px)`
+                                  }}
+                                >
+                                  <div className="w-6 h-6 bg-white rounded-full"></div>
+                                </div>
+                              );
+                            })}
+                            
+                            {/* Battery */}
+                            {battery && (
+                              <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 w-8 h-4 bg-[#fbbf24] rounded flex items-center justify-center">
+                                <div className="w-6 h-2 bg-[#f59e0b] rounded"></div>
+                              </div>
+                            )}
+                            
+                            {/* Camera */}
+                            {camera && (
+                              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-6 h-4 bg-white rounded border-2 border-[#acd7ec] flex items-center justify-center">
+                                <div className="w-3 h-2 bg-[#8b95c9] rounded"></div>
+                              </div>
+                            )}
+                            
+                            {/* Flight Controller */}
+                            {fc && (
+                              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-[#ff9800] rounded"></div>
+                            )}
+                            
+                            {/* Companion Computer */}
+                            {companion && (
+                              <div className="absolute top-1/2 left-1/2 transform translate-x-2 -translate-y-1/2 w-5 h-5 bg-[#43a047] rounded"></div>
+                            )}
+                          </div>
+                        ) : (
+                          // No frame - show placeholder
+                          <div className="w-32 h-32 flex items-center justify-center">
+                            <div className="text-[#8b95c9] text-4xl">🚁</div>
+                          </div>
+                        )}
+                        
+                        {/* Build Type Badge */}
+                        <div className="absolute top-3 right-3">
+                          <span className="px-2 py-1 bg-[#84dcc6] text-white text-xs font-semibold rounded-full">
+                            {frame ? frame.name : 'Empty'}
+                          </span>
+                        </div>
+                        
+                        {/* Parts Count Badge */}
+                        <div className="absolute bottom-3 left-3">
+                          <span className="px-2 py-1 bg-[#8b95c9] text-white text-xs font-semibold rounded-full">
+                            {build.parts?.length || 0} parts
+                          </span>
                         </div>
                       </div>
+                      
+                      <div className="p-8">
+                        <div className="flex items-center justify-between mb-6">
+                          <h3 className="text-xl font-semibold text-gray-900 truncate">{build.name}</h3>
+                          <div className="flex space-x-3">
+                            <Link
+                              href={`/playground?id=${build.id}`}
+                              className="text-[#8b95c9] hover:text-[#7a84b8] text-sm font-medium transition-colors"
+                            >
+                              Edit
+                            </Link>
+                            <button
+                              onClick={() => handleDeleteBuild(build.id)}
+                              disabled={deletingBuild === build.id}
+                              className="text-red-600 hover:text-red-800 text-sm font-medium disabled:opacity-50 transition-colors"
+                            >
+                              {deletingBuild === build.id ? 'Deleting...' : 'Delete'}
+                            </button>
+                          </div>
+                        </div>
 
-                      <div className="space-y-4 text-sm text-gray-600">
-                        <div className="flex justify-between items-center py-2 border-b border-[#e8f4ff]">
-                          <span>Cost:</span>
-                          <span className="font-semibold text-lg text-[#84dcc6]">${build.total_cost || 0}</span>
+                        <div className="space-y-4 text-sm text-gray-600">
+                          <div className="flex justify-between items-center py-2 border-b border-[#e8f4ff]">
+                            <span>Cost:</span>
+                            <span className="font-semibold text-lg text-[#84dcc6]">${build.total_cost || 0}</span>
+                          </div>
+                          <div className="flex justify-between items-center py-2 border-b border-[#e8f4ff]">
+                            <span>Weight:</span>
+                            <span className="font-semibold text-[#acd7ec]">{build.total_weight || 0}g</span>
+                          </div>
+                          <div className="flex justify-between items-center py-2 border-b border-[#e8f4ff]">
+                            <span>Flight Time:</span>
+                            <span className="font-semibold text-[#7a84b8]">{build.flight_time || 0} min</span>
+                          </div>
+                          <div className="flex justify-between items-center py-2">
+                            <span>Parts:</span>
+                            <span className="font-semibold text-[#8b95c9]">{build.parts?.length || 0}</span>
+                          </div>
                         </div>
-                        <div className="flex justify-between items-center py-2 border-b border-[#e8f4ff]">
-                          <span>Weight:</span>
-                          <span className="font-semibold text-[#acd7ec]">{build.total_weight || 0}g</span>
-                        </div>
-                        <div className="flex justify-between items-center py-2 border-b border-[#e8f4ff]">
-                          <span>Flight Time:</span>
-                          <span className="font-semibold text-[#7a84b8]">{build.flight_time || 0} min</span>
-                        </div>
-                        <div className="flex justify-between items-center py-2">
-                          <span>Parts:</span>
-                          <span className="font-semibold text-[#8b95c9]">{build.parts?.length || 0}</span>
-                        </div>
-                      </div>
 
-                      <div className="mt-6 text-xs text-gray-500 text-center">
-                        Created {new Date(build.created_at).toLocaleDateString()}
+                        <div className="mt-6 text-xs text-gray-500 text-center">
+                          Created {new Date(build.created_at).toLocaleDateString()}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>
