@@ -18,7 +18,9 @@ export default function Dashboard() {
       const { data: { user } } = await supabase.auth.getUser()
       setUser(user)
       if (user) {
-        loadUserBuilds(user.id)
+        await loadUserBuilds(user.id)
+        // Try to sync optimizations from localStorage to database
+        await syncOptimizationsToDatabase()
       }
       setLoading(false)
     }
@@ -48,8 +50,27 @@ export default function Dashboard() {
     try {
       setRefreshing(true)
       const userBuilds = await getUserBuilds(userId)
-      setBuilds(userBuilds)
-      console.log('Loaded builds:', userBuilds) // Debug log
+      
+      // Load optimizations from localStorage for each build
+      const buildsWithOptimizations = userBuilds.map(build => {
+        try {
+          const localStorageKey = `build_optimizations_${build.id}`;
+          const storedOptimizations = localStorage.getItem(localStorageKey);
+          if (storedOptimizations) {
+            const optimizationsData = JSON.parse(storedOptimizations);
+            return {
+              ...build,
+              optimizations: optimizationsData.optimizations
+            };
+          }
+        } catch (error) {
+          console.error('Error loading optimizations from localStorage:', error);
+        }
+        return build;
+      });
+      
+      setBuilds(buildsWithOptimizations)
+      console.log('Loaded builds with optimizations:', buildsWithOptimizations) // Debug log
     } catch (error) {
       console.error('Error loading builds:', error)
     } finally {
@@ -60,6 +81,44 @@ export default function Dashboard() {
   const handleRefresh = async () => {
     if (user) {
       await loadUserBuilds(user.id)
+    }
+  }
+
+  // Sync optimizations from localStorage to database
+  const syncOptimizationsToDatabase = async () => {
+    if (!user) return;
+    
+    try {
+      const builds = await getUserBuilds(user.id);
+      
+      for (const build of builds) {
+        const localStorageKey = `build_optimizations_${build.id}`;
+        const storedOptimizations = localStorage.getItem(localStorageKey);
+        
+        if (storedOptimizations) {
+          const optimizationsData = JSON.parse(storedOptimizations);
+          
+          // Try to save optimizations to database
+          const { error } = await supabase
+            .from('builds')
+            .update({
+              optimizations: optimizationsData.optimizations,
+              updated_at: new Date().toISOString()
+            })
+            .eq('id', build.id);
+          
+          if (!error) {
+            // Remove from localStorage if successfully saved to database
+            localStorage.removeItem(localStorageKey);
+            console.log(`Synced optimizations for build ${build.id} to database`);
+          }
+        }
+      }
+      
+      // Reload builds after sync
+      await loadUserBuilds(user.id);
+    } catch (error) {
+      console.error('Error syncing optimizations:', error);
     }
   }
 
@@ -115,9 +174,37 @@ export default function Dashboard() {
           {/* Header */}
           <div className="text-center mb-16">
             <h1 className="text-4xl font-bold text-gray-900 mb-4">My Dashboard</h1>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-6">
               Welcome back! Create and manage your drone designs with ease.
             </p>
+            <div className="flex items-center justify-center space-x-4">
+              <button
+                onClick={handleRefresh}
+                disabled={refreshing}
+                className="px-4 py-2 bg-[#8b95c9] text-white rounded-lg hover:bg-[#7a84b8] transition-colors disabled:opacity-50 flex items-center space-x-2"
+                title="Refresh builds"
+              >
+                <svg 
+                  className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                <span>Refresh</span>
+              </button>
+              <button
+                onClick={syncOptimizationsToDatabase}
+                className="px-4 py-2 bg-[#84dcc6] text-white rounded-lg hover:bg-[#73cbb5] transition-colors flex items-center space-x-2"
+                title="Sync optimizations to database"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                </svg>
+                <span>Sync Optimizations</span>
+              </button>
+            </div>
           </div>
 
           {/* Create New Design Card */}
@@ -361,6 +448,16 @@ export default function Dashboard() {
                             {build.parts?.length || 0} parts
                           </span>
                         </div>
+                        
+                        {/* Optimization Badge */}
+                        {build.optimizations && Object.keys(build.optimizations).filter(key => key !== 'lastUpdated').length > 0 && (
+                          <div className="absolute top-3 left-3">
+                            <span className="px-2 py-1 bg-[#84dcc6] text-white text-xs font-semibold rounded-full flex items-center">
+                              <span className="mr-1">⚡</span>
+                              Optimized
+                            </span>
+                          </div>
+                        )}
                       </div>
                       
                       <div className="p-8">
@@ -372,6 +469,12 @@ export default function Dashboard() {
                               className="text-[#8b95c9] hover:text-[#7a84b8] text-sm font-medium transition-colors"
                             >
                               Edit
+                            </Link>
+                            <Link
+                              href={`/lifecycle?build=${build.id}`}
+                              className="text-[#84dcc6] hover:text-[#73cbb5] text-sm font-medium transition-colors"
+                            >
+                              Optimize
                             </Link>
                             <button
                               onClick={() => handleDeleteBuild(build.id)}
@@ -396,10 +499,37 @@ export default function Dashboard() {
                             <span>Flight Time:</span>
                             <span className="font-semibold text-[#7a84b8]">{build.flight_time || 0} min</span>
                           </div>
-                          <div className="flex justify-between items-center py-2">
+                          <div className="flex justify-between items-center py-2 border-b border-[#e8f4ff]">
                             <span>Parts:</span>
                             <span className="font-semibold text-[#8b95c9]">{build.parts?.length || 0}</span>
                           </div>
+                          
+                          {/* Optimization Information */}
+                          {build.optimizations && Object.keys(build.optimizations).filter(key => key !== 'lastUpdated').length > 0 && (
+                            <div className="pt-2">
+                              <div className="flex justify-between items-center mb-2">
+                                <span className="font-medium text-gray-700">Optimizations:</span>
+                                <span className="text-xs text-[#84dcc6] font-semibold">
+                                  {Object.keys(build.optimizations).filter(key => key !== 'lastUpdated').length} applied
+                                </span>
+                              </div>
+                              <div className="space-y-1">
+                                {Object.keys(build.optimizations)
+                                  .filter(key => key !== 'lastUpdated')
+                                  .map((optimization, index) => (
+                                    <div key={index} className="flex items-center text-xs text-gray-500">
+                                      <span className="mr-1">✓</span>
+                                      {optimization === 'batteryOptimization' ? 'Battery Optimization' : optimization}
+                                      {build.optimizations[optimization]?.appliedAt && (
+                                        <span className="ml-auto text-gray-400">
+                                          {new Date(build.optimizations[optimization].appliedAt).toLocaleDateString()}
+                                        </span>
+                                      )}
+                                    </div>
+                                  ))}
+                              </div>
+                            </div>
+                          )}
                         </div>
 
                         <div className="mt-6 text-xs text-gray-500 text-center">
