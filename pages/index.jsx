@@ -56,7 +56,7 @@ export default function Home() {
           Build Your Perfect Drone <span className="text-[#8b95c9]">with AI</span>
         </h1>
         <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-2xl mx-auto">
-          DroneBuilder helps you design, customize, and optimize drones for any use case—powered by advanced AI recommendations.
+          DroneBuilder helps you design, customize, and optimize drones for any use case using by advanced AI recommendations and by a community of drone builders.
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10">
           <button
