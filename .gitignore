@@ -46,4 +46,9 @@ yarn-error.log*
 # Contentlayer
 .contentlayer
 
-.sql
+# SQL files (database schemas and migrations)
+*.sql
+supabase-schema.sql
+simple-builds-table.sql
+simple-profiles-table.sql
+
