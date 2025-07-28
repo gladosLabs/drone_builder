@@ -41,11 +41,7 @@ Think of it as **Figma for drone builders** - intuitive, collaborative, and powe
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🆘 Support
-
-- 📖 [Documentation](https://dronebuilder.com/docs)
-- 💬 [Community Discussions](https://dronebuilder.com/community)
-- 🐛 [Report Issues](https://github.com/yourusername/DroneBuilder/issues)
-- 📧 [Contact Us](mailto:support@dronebuilder.com)
+- 📧 [Contact Us](mailto:tejnaren07@gmail.com)
 
 ## 🎉 Acknowledgments
 
