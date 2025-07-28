@@ -36,9 +36,9 @@ export default function Home() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white flex items-center justify-center">
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#84dcc6] mx-auto mb-4"></div>
           <p className="text-gray-600">Loading...</p>
         </div>
       </div>
@@ -48,26 +48,26 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white flex flex-col items-center justify-start">
       {/* Hero Section */}
-      <section className="w-full relative overflow-hidden bg-gradient-to-br from-[#84dcc6]/10 via-white to-[#8b95c9]/10">
+      <section className="w-full relative overflow-hidden bg-white">
         <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
         <div className="relative z-10 max-w-6xl mx-auto text-center py-20 px-4">
           <div className="inline-flex items-center px-6 py-3 mb-8 rounded-full bg-[#84dcc6]/20 text-[#84dcc6] text-sm font-semibold uppercase tracking-wider shadow-lg">
             <span className="w-2 h-2 bg-[#84dcc6] rounded-full mr-3 animate-pulse"></span>
             One Tool for Drone Builders
           </div>
-          <h1 className="text-6xl md:text-7xl font-extrabold bg-gradient-to-r from-gray-900 via-[#8b95c9] to-[#84dcc6] bg-clip-text text-transparent mb-8 leading-tight">
-            Build Your Perfect Drone <span className="text-[#8b95c9]">with AI</span>
+          <h1 className="text-6xl md:text-7xl font-extrabold text-black mb-8 leading-tight">
+            Build Your Perfect Drone <span className="text-black">with AI</span>
           </h1>
-          <p className="text-xl md:text-2xl text-gray-600 mb-6 max-w-3xl mx-auto leading-relaxed">
-            DroneBuilder helps you design, customize, and optimize drones for any use case using advanced AI recommendations and a community of drone builders.
+          <p className="text-xl md:text-2xl text-black mb-6 max-w-3xl mx-auto leading-relaxed">
+            DroneBuilder helps you design, customize, and optimize drones for any use case using AI recommendations and a community of drone builders.
           </p>
-          <p className="text-lg text-gray-500 mb-12 max-w-2xl mx-auto">
-            Think of it as <span className="font-semibold text-[#8b95c9]">Figma for drone builders</span> - intuitive, collaborative, and powerful.
+          <p className="text-lg text-black mb-12 max-w-2xl mx-auto">
+            Think of it as <span className="font-semibold text-black">Figma for drone builders</span> - intuitive, collaborative, and powerful.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-16">
             <button
               onClick={handleStartBuilding}
-              className="px-10 py-5 rounded-2xl bg-gradient-to-r from-[#8b95c9] to-[#84dcc6] text-white font-bold text-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
+              className="px-10 py-5 rounded-2xl bg-[#8b95c9] text-white font-bold text-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
             >
               <svg className="w-5 h-5 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -83,21 +83,21 @@ export default function Home() {
           </div>
           
           {/* Feature Highlights */}
-          <div className="flex items-center justify-center space-x-12 text-sm text-gray-500">
+          <div className="flex items-center justify-center space-x-12 text-sm text-black">
             <div className="flex items-center">
-              <svg className="w-4 h-4 mr-2 text-[#84dcc6]" fill="currentColor" viewBox="0 0 20 20">
+              <svg className="w-4 h-4 mr-2 text-black" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
               </svg>
               AI-Powered Optimization
             </div>
             <div className="flex items-center">
-              <svg className="w-4 h-4 mr-2 text-[#84dcc6]" fill="currentColor" viewBox="0 0 20 20">
+              <svg className="w-4 h-4 mr-2 text-black" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
               </svg>
               Real-time Collaboration
             </div>
             <div className="flex items-center">
-              <svg className="w-4 h-4 mr-2 text-[#84dcc6]" fill="currentColor" viewBox="0 0 20 20">
+              <svg className="w-4 h-4 mr-2 text-black" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
               </svg>
               Enterprise Ready
@@ -109,47 +109,47 @@ export default function Home() {
       {/* How It Works Section */}
       <section id="how-it-works" className="w-full max-w-6xl mx-auto py-20 px-4">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold bg-gradient-to-r from-gray-900 to-[#8b95c9] bg-clip-text text-transparent mb-4">
+          <h2 className="text-4xl font-bold text-black mb-4">
             How DroneBuilder Works
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="text-xl text-black max-w-2xl mx-auto">
             From concept to completion, we've streamlined the entire drone building process
           </p>
         </div>
         <div className="grid md:grid-cols-3 gap-8">
-          <div className="bg-gradient-to-br from-white to-[#84dcc6]/5 rounded-2xl shadow-xl p-8 flex flex-col items-center hover:shadow-2xl transform hover:scale-105 transition-all duration-300 border border-gray-100">
-            <div className="w-16 h-16 bg-gradient-to-br from-[#84dcc6] to-[#73cbb5] rounded-2xl flex items-center justify-center mb-6">
+          <div className="bg-white rounded-2xl shadow-xl p-8 flex flex-col items-center hover:shadow-2xl transform hover:scale-105 transition-all duration-300 border border-gray-100">
+            <div className="w-16 h-16 bg-[#84dcc6] rounded-2xl flex items-center justify-center mb-6">
               <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
               </svg>
             </div>
-            <h3 className="text-xl font-bold text-gray-900 mb-4 text-center">Describe Your Needs</h3>
-            <p className="text-gray-600 text-center leading-relaxed">Tell us your use case, budget, and preferences. DroneBuilder supports everything from hobby to research and commercial drones.</p>
+            <h3 className="text-xl font-bold text-black mb-4 text-center">Describe Your Needs</h3>
+            <p className="text-black text-center leading-relaxed">Tell us your use case, budget, and preferences. DroneBuilder supports everything from hobby to research and commercial drones.</p>
           </div>
-          <div className="bg-gradient-to-br from-white to-[#8b95c9]/5 rounded-2xl shadow-xl p-8 flex flex-col items-center hover:shadow-2xl transform hover:scale-105 transition-all duration-300 border border-gray-100">
-            <div className="w-16 h-16 bg-gradient-to-br from-[#8b95c9] to-[#7a85b8] rounded-2xl flex items-center justify-center mb-6">
+          <div className="bg-white rounded-2xl shadow-xl p-8 flex flex-col items-center hover:shadow-2xl transform hover:scale-105 transition-all duration-300 border border-gray-100">
+            <div className="w-16 h-16 bg-[#8b95c9] rounded-2xl flex items-center justify-center mb-6">
               <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
               </svg>
             </div>
-            <h3 className="text-xl font-bold text-gray-900 mb-4 text-center">Get AI-Powered Recommendations</h3>
-            <p className="text-gray-600 text-center leading-relaxed">Our AI suggests the best parts, wiring, and configuration for your needs—instantly and accurately.</p>
+            <h3 className="text-xl font-bold text-black mb-4 text-center">Get AI-Powered Recommendations</h3>
+            <p className="text-black text-center leading-relaxed">Our AI suggests the best parts, wiring, and configuration for your needs—instantly and accurately.</p>
           </div>
-          <div className="bg-gradient-to-br from-white to-[#acd7ec]/5 rounded-2xl shadow-xl p-8 flex flex-col items-center hover:shadow-2xl transform hover:scale-105 transition-all duration-300 border border-gray-100">
-            <div className="w-16 h-16 bg-gradient-to-br from-[#acd7ec] to-[#9bc6db] rounded-2xl flex items-center justify-center mb-6">
+          <div className="bg-white rounded-2xl shadow-xl p-8 flex flex-col items-center hover:shadow-2xl transform hover:scale-105 transition-all duration-300 border border-gray-100">
+            <div className="w-16 h-16 bg-[#acd7ec] rounded-2xl flex items-center justify-center mb-6">
               <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
               </svg>
             </div>
-            <h3 className="text-xl font-bold text-gray-900 mb-4 text-center">Start Building</h3>
-            <p className="text-gray-600 text-center leading-relaxed">View your custom build, get a parts list, and start building your drone with confidence.</p>
+            <h3 className="text-xl font-bold text-black mb-4 text-center">Start Building</h3>
+            <p className="text-black text-center leading-relaxed">View your custom build, get a parts list, and start building your drone with confidence.</p>
           </div>
         </div>
       </section>
 
       {/* Call to Action */}
       <section className="w-full max-w-2xl mx-auto text-center py-16 px-4">
-        <h2 className="text-3xl font-bold text-gray-900 mb-6">Need help in building your drone? Read our docs or contact us</h2>
+        <h2 className="text-3xl font-bold text-black mb-6">Need help in building your drone? Read our docs or contact us</h2>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
             href="/docs"
