@@ -194,9 +194,9 @@ export default function Navbar({ onSave, onLoad, onExportJSON, onExportCSV, save
           <Link href="/lifecycle" className="hover:text-[#8b95c9] transition-colors">Lifecycle</Link>
           <Link href="/docs" className="hover:text-[#8b95c9] transition-colors">Docs</Link>
           <Link href="/help" className="hover:text-[#8b95c9] transition-colors">Help</Link>
-          <Link href="/pricing" className="hover:text-[#8b95c9] transition-colors">
+          {/* <Link href="/pricing" className="hover:text-[#8b95c9] transition-colors">
             Pricing
-          </Link>
+          </Link> */}
         </div>
         
         {/* Right side - Auth & Save/Export */}
