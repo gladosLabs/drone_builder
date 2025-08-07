@@ -56,7 +56,7 @@ export default function Home() {
             One Tool for Drone Builders
           </div>
           <h1 className="text-6xl md:text-7xl font-extrabold text-black mb-8 leading-tight">
-            Build Your Perfect Drone <span className="text-black">with AI</span>
+            Build Your Perfect Drone <span className="text-black">with DroneBuilder</span>
           </h1>
           <p className="text-xl md:text-2xl text-black mb-6 max-w-3xl mx-auto leading-relaxed">
             DroneBuilder helps you design, customize, and optimize drones for any use case using AI recommendations and a community of drone builders.
