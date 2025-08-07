@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { supabase } from '../lib/supabase';
 import { getUserBuilds } from '../lib/database';
+import { versionControl } from '../lib/version-control';
 import ProtectedRoute from '../components/ProtectedRoute';
 
 export default function DroneLifecycle() {
@@ -55,12 +56,15 @@ export default function DroneLifecycle() {
     }
   });
   const [versionControl, setVersionControl] = useState({
-    versions: [],
-    currentVersion: null,
+    repository: null,
+    currentBranch: null,
     branches: [],
-    currentBranch: 'main',
     commits: [],
-    changes: []
+    currentCommit: null,
+    changes: [],
+    tags: [],
+    mergeRequests: [],
+    comments: []
   });
   const [selectedBattery, setSelectedBattery] = useState(null);
   const [selectedESC, setSelectedESC] = useState(null);
@@ -691,147 +695,57 @@ export default function DroneLifecycle() {
     setShowTeamCollaborationModal(true);
   };
 
-  const initializeVersionControl = () => {
-    // Initialize with sample version control data
-    const sampleVersions = [
-      {
-        id: 1,
-        version: "v1.2.0",
-        name: "Optimized Motor Configuration",
-        description: "Updated motor selection for better efficiency and reduced weight",
-        timestamp: "2024-01-15T14:30:00Z",
-        author: "Alex Chen",
-        changes: [
-          "Upgraded motors from 2207 to 2306 for better efficiency",
-          "Reduced frame weight by 50g",
-          "Updated ESC configuration for new motors"
-        ],
-        buildData: {
-          totalWeight: 850,
-          flightTime: 18,
-          maxSpeed: 95
-        }
-      },
-      {
-        id: 2,
-        version: "v1.1.0",
-        name: "Battery Optimization",
-        description: "Implemented battery optimization with improved flight time",
-        timestamp: "2024-01-14T16:45:00Z",
-        author: "Sarah Johnson",
-        changes: [
-          "Upgraded battery from 3000mAh to 4000mAh",
-          "Optimized power distribution",
-          "Added battery monitoring system"
-        ],
-        buildData: {
-          totalWeight: 900,
-          flightTime: 22,
-          maxSpeed: 88
-        }
-      },
-      {
-        id: 3,
-        version: "v1.0.0",
-        name: "Initial Design",
-        description: "First complete drone design with basic components",
-        timestamp: "2024-01-13T10:15:00Z",
-        author: "Mike Rodriguez",
-        changes: [
-          "Basic frame assembly",
-          "Standard motor configuration",
-          "Basic battery setup"
-        ],
-        buildData: {
-          totalWeight: 950,
-          flightTime: 15,
-          maxSpeed: 80
-        }
+  const initializeVersionControl = async () => {
+    if (!currentBuild) {
+      showToast("Please select a build first", "warning");
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+
+      // Get or create repository for the current build
+      let repository;
+      try {
+        repository = await versionControl.getRepository(currentBuild.id);
+      } catch (error) {
+        // Repository doesn't exist, create one
+        repository = await versionControl.createRepository(
+          currentBuild.id,
+          `Repository for ${currentBuild.name}`,
+          `Version control for ${currentBuild.name}`
+        );
       }
-    ];
 
-    const sampleBranches = [
-      {
-        name: "main",
-        lastCommit: "v1.2.0",
-        lastUpdate: "2024-01-15T14:30:00Z",
-        isActive: true
-      },
-      {
-        name: "experimental",
-        lastCommit: "v1.2.1-beta",
-        lastUpdate: "2024-01-15T12:00:00Z",
-        isActive: false
-      },
-      {
-        name: "feature/autonomous",
-        lastCommit: "v1.3.0-alpha",
-        lastUpdate: "2024-01-15T09:30:00Z",
-        isActive: false
-      }
-    ];
+      // Get branches
+      const branches = await versionControl.getBranches(repository.id);
+      
+      // Get commit history
+      const commits = await versionControl.getCommitHistory(repository.id);
+      
+      // Get tags
+      const tags = await versionControl.getTags(repository.id);
+      
+      // Get merge requests
+      const mergeRequests = await versionControl.getMergeRequests(repository.id);
 
-    const sampleCommits = [
-      {
-        id: "abc123",
-        message: "Optimize motor configuration for better efficiency",
-        author: "Alex Chen",
-        timestamp: "2024-01-15T14:30:00Z",
-        changes: 3,
-        additions: 15,
-        deletions: 8
-      },
-      {
-        id: "def456",
-        message: "Implement battery optimization system",
-        author: "Sarah Johnson",
-        timestamp: "2024-01-14T16:45:00Z",
-        changes: 5,
-        additions: 22,
-        deletions: 12
-      },
-      {
-        id: "ghi789",
-        message: "Initial drone design setup",
-        author: "Mike Rodriguez",
-        timestamp: "2024-01-13T10:15:00Z",
-        changes: 8,
-        additions: 45,
-        deletions: 0
-      }
-    ];
+      setVersionControl(prev => ({
+        ...prev,
+        repository,
+        branches,
+        currentBranch: branches.find(b => b.is_default) || branches[0],
+        commits,
+        tags,
+        mergeRequests
+      }));
 
-    const sampleChanges = [
-      {
-        type: "modified",
-        file: "motor-config.json",
-        description: "Updated motor specifications",
-        timestamp: "2024-01-15T14:30:00Z"
-      },
-      {
-        type: "added",
-        file: "battery-optimization.js",
-        description: "New battery optimization algorithm",
-        timestamp: "2024-01-14T16:45:00Z"
-      },
-      {
-        type: "deleted",
-        file: "old-frame-design.stl",
-        description: "Removed outdated frame design",
-        timestamp: "2024-01-15T14:30:00Z"
-      }
-    ];
-
-    setVersionControl({
-      versions: sampleVersions,
-      currentVersion: sampleVersions[0],
-      branches: sampleBranches,
-      currentBranch: 'main',
-      commits: sampleCommits,
-      changes: sampleChanges
-    });
-
-    setShowVersionControlModal(true);
+      setShowVersionControlModal(true);
+    } catch (error) {
+      console.error('Error initializing version control:', error);
+      showToast("Error initializing version control", "error");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // Handle battery selection
@@ -1132,54 +1046,168 @@ export default function DroneLifecycle() {
   };
 
   // Version control functions
-  const createNewVersion = (name, description) => {
-    const newVersion = {
-      id: Date.now(),
-      version: `v1.${versionControl.versions.length + 1}.0`,
-      name,
-      description,
-      timestamp: new Date().toISOString(),
-      author: "You",
-      changes: ["Auto-generated version"],
-      buildData: {
-        totalWeight: buildAnalysis?.totalWeight || 0,
-        flightTime: buildAnalysis?.estimatedFlightTime || 0,
-        maxSpeed: buildAnalysis?.estimatedSpeed || 0
+  const createNewCommit = async (message, buildSnapshot) => {
+    if (!versionControl.repository || !versionControl.currentBranch) {
+      showToast("No repository or branch selected", "warning");
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+
+      // Calculate changes from previous commit
+      const changes = versionControl.currentCommit ? 
+        versionControl.calculateBuildChanges(versionControl.currentCommit.build_snapshot, buildSnapshot) : 
+        null;
+
+      // Create commit
+      const commit = await versionControl.createCommit(
+        versionControl.repository.id,
+        versionControl.currentBranch.id,
+        message,
+        buildSnapshot,
+        changes
+      );
+
+      // Refresh commit history
+      const commits = await versionControl.getCommitHistory(versionControl.repository.id);
+
+      setVersionControl(prev => ({
+        ...prev,
+        commits,
+        currentCommit: commit
+      }));
+
+      showToast(`Commit created: ${message}`, "success");
+    } catch (error) {
+      console.error('Error creating commit:', error);
+      showToast("Error creating commit", "error");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const switchToCommit = async (commitId) => {
+    try {
+      setIsLoading(true);
+
+      const commit = await versionControl.getCommit(commitId);
+      const snapshot = await versionControl.getBuildSnapshot(commitId);
+
+      // Update current build with snapshot data
+      if (snapshot) {
+        setCurrentBuild(prev => ({
+          ...prev,
+          ...snapshot.build_data
+        }));
+        setBuildParts(snapshot.parts_data || []);
+        
+        // Recalculate analysis
+        const analysis = analyzeBuild(snapshot.parts_data || []);
+        setBuildAnalysis(analysis);
       }
-    };
 
-    setVersionControl(prev => ({
-      ...prev,
-      versions: [newVersion, ...prev.versions],
-      currentVersion: newVersion
-    }));
+      setVersionControl(prev => ({
+        ...prev,
+        currentCommit: commit
+      }));
 
-    showToast(`New version ${newVersion.version} created!`, "success");
+      showToast(`Switched to commit: ${commit.message}`, "success");
+    } catch (error) {
+      console.error('Error switching to commit:', error);
+      showToast("Error switching to commit", "error");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const switchToVersion = (version) => {
-    setVersionControl(prev => ({
-      ...prev,
-      currentVersion: version
-    }));
+  const createNewBranch = async (branchName, description = '') => {
+    if (!versionControl.repository) {
+      showToast("No repository selected", "warning");
+      return;
+    }
 
-    showToast(`Switched to version ${version.version}`, "success");
+    try {
+      setIsLoading(true);
+
+      const branch = await versionControl.createBranch(
+        versionControl.repository.id,
+        branchName,
+        description
+      );
+
+      // Refresh branches
+      const branches = await versionControl.getBranches(versionControl.repository.id);
+
+      setVersionControl(prev => ({
+        ...prev,
+        branches
+      }));
+
+      showToast(`New branch '${branchName}' created!`, "success");
+    } catch (error) {
+      console.error('Error creating branch:', error);
+      showToast("Error creating branch", "error");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const createNewBranch = (branchName) => {
-    const newBranch = {
-      name: branchName,
-      lastCommit: "Initial commit",
-      lastUpdate: new Date().toISOString(),
-      isActive: false
-    };
+  const switchToBranch = async (branchId) => {
+    try {
+      setIsLoading(true);
 
-    setVersionControl(prev => ({
-      ...prev,
-      branches: [...prev.branches, newBranch]
-    }));
+      const branch = await versionControl.switchBranch(branchId);
+      const commits = await versionControl.getCommitHistory(versionControl.repository.id, branch.name);
 
-    showToast(`New branch '${branchName}' created!`, "success");
+      setVersionControl(prev => ({
+        ...prev,
+        currentBranch: branch,
+        commits
+      }));
+
+      showToast(`Switched to branch: ${branch.name}`, "success");
+    } catch (error) {
+      console.error('Error switching branch:', error);
+      showToast("Error switching branch", "error");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const revertToCommit = async (commitId, newBranchName) => {
+    if (!versionControl.repository) {
+      showToast("No repository selected", "warning");
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+
+      const newCommit = await versionControl.revertToCommit(
+        versionControl.repository.id,
+        commitId,
+        newBranchName,
+        `Revert to commit ${versionControl.formatCommitHash(commitId)}`
+      );
+
+      // Refresh branches and commits
+      const branches = await versionControl.getBranches(versionControl.repository.id);
+      const commits = await versionControl.getCommitHistory(versionControl.repository.id);
+
+      setVersionControl(prev => ({
+        ...prev,
+        branches,
+        commits
+      }));
+
+      showToast(`Reverted to commit in new branch: ${newBranchName}`, "success");
+    } catch (error) {
+      console.error('Error reverting to commit:', error);
+      showToast("Error reverting to commit", "error");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // Handle build selection
@@ -1268,6 +1296,23 @@ export default function DroneLifecycle() {
       setUserBuilds(prev => prev.map(build => 
         build.id === currentBuild.id ? updatedBuild : build
       ));
+
+      // Auto-create commit if version control is initialized
+      if (versionControl.repository && versionControl.currentBranch) {
+        try {
+          const buildSnapshot = {
+            ...updatedBuild,
+            analysis: buildAnalysis,
+            optimizations: updatedBuild.optimizations
+          };
+
+          const commitMessage = versionControl.generateCommitMessage(optimizations);
+          await createNewCommit(commitMessage, buildSnapshot);
+        } catch (commitError) {
+          console.error('Error creating auto-commit:', commitError);
+          // Don't fail the save operation if commit fails
+        }
+      }
 
       showToast("Optimized build saved successfully!", "success");
       return updatedBuild;
@@ -3447,7 +3492,7 @@ export default function DroneLifecycle() {
         {/* Version Control Modal */}
         {showVersionControlModal && (
           <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/30">
-            <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-6xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-7xl w-full mx-4 max-h-[90vh] overflow-y-auto">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-2xl font-bold text-gray-900">Version Control</h2>
                 <button
@@ -3460,191 +3505,247 @@ export default function DroneLifecycle() {
                 </button>
               </div>
 
-              <div className="grid md:grid-cols-3 gap-6">
-                {/* Version History */}
-                <div className="md:col-span-2">
-                  <div className="bg-white border border-[#d6edff] rounded-lg p-6">
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-lg font-semibold text-gray-900">Version History</h3>
-                      <button 
-                        onClick={() => createNewVersion("New Version", "Auto-generated version")}
-                        className="px-4 py-2 bg-[#84dcc6] text-white rounded-lg text-sm hover:bg-[#73cbb5] transition-colors"
-                      >
-                        Create Version
-                      </button>
-                    </div>
-                    
-                    <div className="space-y-4">
-                      {versionControl.versions.map((version) => (
-                        <div key={version.id} className={`border rounded-lg p-4 ${
-                          versionControl.currentVersion?.id === version.id 
-                            ? 'border-[#84dcc6] bg-[#84dcc6]/5' 
-                            : 'border-gray-200 hover:border-[#8b95c9]'
-                        }`}>
-                          <div className="flex items-center justify-between mb-3">
-                            <div>
-                              <h4 className="font-semibold text-gray-900">{version.version} - {version.name}</h4>
-                              <p className="text-sm text-gray-600">{version.description}</p>
-                            </div>
-                            <div className="text-right">
-                              <div className="text-sm font-medium text-gray-900">{version.author}</div>
-                              <div className="text-xs text-gray-500">
-                                {new Date(version.timestamp).toLocaleDateString()}
-                              </div>
-                            </div>
-                          </div>
-                          
-                          <div className="grid md:grid-cols-3 gap-3 mb-3">
-                            <div className="text-center p-2 bg-gray-50 rounded">
-                              <div className="text-sm font-bold text-gray-900">{version.buildData.totalWeight}g</div>
-                              <div className="text-xs text-gray-600">Weight</div>
-                            </div>
-                            <div className="text-center p-2 bg-gray-50 rounded">
-                              <div className="text-sm font-bold text-gray-900">{version.buildData.flightTime}min</div>
-                              <div className="text-xs text-gray-600">Flight Time</div>
-                            </div>
-                            <div className="text-center p-2 bg-gray-50 rounded">
-                              <div className="text-sm font-bold text-gray-900">{version.buildData.maxSpeed}km/h</div>
-                              <div className="text-xs text-gray-600">Max Speed</div>
-                            </div>
-                          </div>
-                          
-                          <div className="mb-3">
-                            <h5 className="text-sm font-medium text-gray-900 mb-2">Changes:</h5>
-                            <ul className="text-sm text-gray-600 space-y-1">
-                              {version.changes.map((change, index) => (
-                                <li key={index} className="flex items-start">
-                                  <span className="mr-2">•</span>
-                                  {change}
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                          
-                          <div className="flex items-center justify-between">
-                            <button 
-                              onClick={() => switchToVersion(version)}
-                              className={`px-3 py-1 rounded text-sm transition-colors ${
-                                versionControl.currentVersion?.id === version.id
-                                  ? 'bg-[#84dcc6] text-white'
-                                  : 'bg-gray-100 text-gray-700 hover:bg-[#8b95c9] hover:text-white'
-                              }`}
-                            >
-                              {versionControl.currentVersion?.id === version.id ? 'Current' : 'Switch to'}
-                            </button>
-                            <div className="flex space-x-2">
-                              <button className="px-3 py-1 bg-[#acd7ec] text-white rounded text-sm hover:bg-[#9bc6db] transition-colors">
-                                Compare
-                              </button>
-                              <button className="px-3 py-1 bg-[#ff6b6b] text-white rounded text-sm hover:bg-[#e55a5a] transition-colors">
-                                Revert
-                              </button>
-                            </div>
+              {!versionControl.repository ? (
+                <div className="text-center py-12">
+                  <div className="text-gray-500 mb-4">No repository found for this build</div>
+                  <button 
+                    onClick={initializeVersionControl}
+                    className="px-6 py-3 bg-[#84dcc6] text-white rounded-lg hover:bg-[#73cbb5] transition-colors"
+                  >
+                    Initialize Repository
+                  </button>
+                </div>
+              ) : (
+                <div className="grid md:grid-cols-4 gap-6">
+                  {/* Repository Info */}
+                  <div className="md:col-span-4 mb-6">
+                    <div className="bg-gradient-to-r from-[#84dcc6]/10 to-[#8b95c9]/10 rounded-lg p-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h3 className="text-lg font-semibold text-gray-900">{versionControl.repository.name}</h3>
+                          <p className="text-sm text-gray-600">{versionControl.repository.description}</p>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-sm text-gray-600">Current Branch</div>
+                          <div className="font-medium text-gray-900">
+                            {versionControl.currentBranch?.name || 'main'}
                           </div>
                         </div>
-                      ))}
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                {/* Branches & Commits */}
-                <div className="md:col-span-1">
-                  <div className="space-y-6">
-                    {/* Branches */}
+                  {/* Commit History */}
+                  <div className="md:col-span-3">
                     <div className="bg-white border border-[#d6edff] rounded-lg p-6">
                       <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-lg font-semibold text-gray-900">Branches</h3>
+                        <h3 className="text-lg font-semibold text-gray-900">Commit History</h3>
                         <button 
-                          onClick={() => createNewBranch("feature/new-feature")}
-                          className="px-3 py-1 bg-[#84dcc6] text-white rounded text-sm hover:bg-[#73cbb5] transition-colors"
+                          onClick={() => {
+                            const buildSnapshot = {
+                              ...currentBuild,
+                              parts: buildParts,
+                              analysis: buildAnalysis,
+                              optimizations: currentBuild.optimizations
+                            };
+                            const message = prompt("Enter commit message:", "Update build configuration");
+                            if (message) {
+                              createNewCommit(message, buildSnapshot);
+                            }
+                          }}
+                          className="px-4 py-2 bg-[#84dcc6] text-white rounded-lg text-sm hover:bg-[#73cbb5] transition-colors"
                         >
-                          New
+                          Create Commit
                         </button>
                       </div>
                       
-                      <div className="space-y-3">
-                        {versionControl.branches.map((branch) => (
-                          <div key={branch.name} className={`flex items-center justify-between p-3 rounded-lg ${
-                            branch.isActive ? 'bg-[#84dcc6]/10 border border-[#84dcc6]' : 'bg-gray-50'
-                          }`}>
-                            <div>
-                              <div className="font-medium text-gray-900">{branch.name}</div>
-                              <div className="text-sm text-gray-600">{branch.lastCommit}</div>
-                              <div className="text-xs text-gray-500">
-                                {new Date(branch.lastUpdate).toLocaleDateString()}
+                      <div className="space-y-4">
+                        {versionControl.commits.length === 0 ? (
+                          <div className="text-center py-8 text-gray-500">
+                            No commits yet. Create your first commit!
+                          </div>
+                        ) : (
+                          versionControl.commits.map((commit) => (
+                            <div key={commit.commit_id} className={`border rounded-lg p-4 ${
+                              versionControl.currentCommit?.commit_id === commit.commit_id 
+                                ? 'border-[#84dcc6] bg-[#84dcc6]/5' 
+                                : 'border-gray-200 hover:border-[#8b95c9]'
+                            }`}>
+                              <div className="flex items-center justify-between mb-3">
+                                <div>
+                                  <h4 className="font-semibold text-gray-900">{commit.message}</h4>
+                                  <p className="text-sm text-gray-600">
+                                    {versionControl.formatCommitHash(commit.commit_hash)}
+                                  </p>
+                                </div>
+                                <div className="text-right">
+                                  <div className="text-sm font-medium text-gray-900">{commit.author_name}</div>
+                                  <div className="text-xs text-gray-500">
+                                    {versionControl.formatDate(commit.created_at)}
+                                  </div>
+                                </div>
+                              </div>
+                              
+                              <div className="flex items-center justify-between">
+                                <button 
+                                  onClick={() => switchToCommit(commit.commit_id)}
+                                  className={`px-3 py-1 rounded text-sm transition-colors ${
+                                    versionControl.currentCommit?.commit_id === commit.commit_id
+                                      ? 'bg-[#84dcc6] text-white'
+                                      : 'bg-gray-100 text-gray-700 hover:bg-[#8b95c9] hover:text-white'
+                                  }`}
+                                >
+                                  {versionControl.currentCommit?.commit_id === commit.commit_id ? 'Current' : 'Switch to'}
+                                </button>
+                                <div className="flex space-x-2">
+                                  <button 
+                                    onClick={() => {
+                                      const newBranchName = prompt("Enter new branch name:", `revert-${commit.commit_id.substring(0, 8)}`);
+                                      if (newBranchName) {
+                                        revertToCommit(commit.commit_id, newBranchName);
+                                      }
+                                    }}
+                                    className="px-3 py-1 bg-[#ff6b6b] text-white rounded text-sm hover:bg-[#e55a5a] transition-colors"
+                                  >
+                                    Revert
+                                  </button>
+                                </div>
                               </div>
                             </div>
-                            {branch.isActive && (
-                              <span className="px-2 py-1 bg-[#84dcc6] text-white text-xs rounded-full">
-                                Active
-                              </span>
-                            )}
-                          </div>
-                        ))}
+                          ))
+                        )}
                       </div>
                     </div>
+                  </div>
 
-                    {/* Recent Commits */}
-                    <div className="bg-white border border-[#d6edff] rounded-lg p-6">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Commits</h3>
-                      <div className="space-y-3">
-                        {versionControl.commits.map((commit) => (
-                          <div key={commit.id} className="p-3 bg-gray-50 rounded-lg">
-                            <div className="flex items-center justify-between mb-2">
-                              <span className="text-sm font-medium text-gray-900">{commit.message}</span>
-                              <span className="text-xs text-gray-500">{commit.id.substring(0, 7)}</span>
+                  {/* Branches & Actions */}
+                  <div className="md:col-span-1">
+                    <div className="space-y-6">
+                      {/* Branches */}
+                      <div className="bg-white border border-[#d6edff] rounded-lg p-6">
+                        <div className="flex items-center justify-between mb-4">
+                          <h3 className="text-lg font-semibold text-gray-900">Branches</h3>
+                          <button 
+                            onClick={() => {
+                              const branchName = prompt("Enter branch name:", "feature/new-feature");
+                              if (branchName) {
+                                createNewBranch(branchName);
+                              }
+                            }}
+                            className="px-3 py-1 bg-[#84dcc6] text-white rounded text-sm hover:bg-[#73cbb5] transition-colors"
+                          >
+                            New
+                          </button>
+                        </div>
+                        
+                        <div className="space-y-3">
+                          {versionControl.branches.map((branch) => (
+                            <div key={branch.id} className={`flex items-center justify-between p-3 rounded-lg cursor-pointer ${
+                              versionControl.currentBranch?.id === branch.id ? 'bg-[#84dcc6]/10 border border-[#84dcc6]' : 'bg-gray-50 hover:bg-gray-100'
+                            }`} onClick={() => switchToBranch(branch.id)}>
+                              <div>
+                                <div className="font-medium text-gray-900">{branch.name}</div>
+                                <div className="text-xs text-gray-500">
+                                  {versionControl.formatDate(branch.created_at)}
+                                </div>
+                              </div>
+                              {versionControl.currentBranch?.id === branch.id && (
+                                <span className="px-2 py-1 bg-[#84dcc6] text-white text-xs rounded-full">
+                                  Active
+                                </span>
+                              )}
                             </div>
-                            <div className="flex items-center justify-between text-xs text-gray-600">
-                              <span>{commit.author}</span>
-                              <span>{new Date(commit.timestamp).toLocaleDateString()}</span>
-                            </div>
-                            <div className="flex items-center space-x-4 mt-2 text-xs text-gray-500">
-                              <span>{commit.changes} files changed</span>
-                              <span className="text-green-600">+{commit.additions}</span>
-                              <span className="text-red-600">-{commit.deletions}</span>
-                            </div>
-                          </div>
-                        ))}
+                          ))}
+                        </div>
                       </div>
-                    </div>
 
-                    {/* Recent Changes */}
-                    <div className="bg-white border border-[#d6edff] rounded-lg p-6">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Changes</h3>
-                      <div className="space-y-3">
-                        {versionControl.changes.map((change, index) => (
-                          <div key={index} className="flex items-center space-x-3 p-2 bg-gray-50 rounded">
-                            <div className={`w-2 h-2 rounded-full ${
-                              change.type === 'added' ? 'bg-green-400' :
-                              change.type === 'modified' ? 'bg-yellow-400' :
-                              'bg-red-400'
-                            }`}></div>
-                            <div className="flex-1">
-                              <div className="text-sm font-medium text-gray-900">{change.file}</div>
-                              <div className="text-xs text-gray-600">{change.description}</div>
+                      {/* Tags */}
+                      <div className="bg-white border border-[#d6edff] rounded-lg p-6">
+                        <div className="flex items-center justify-between mb-4">
+                          <h3 className="text-lg font-semibold text-gray-900">Tags</h3>
+                          <button 
+                            onClick={() => {
+                              const tagName = prompt("Enter tag name:", "v1.0.0");
+                              if (tagName && versionControl.currentCommit) {
+                                versionControl.createTag(
+                                  versionControl.repository.id,
+                                  versionControl.currentCommit.commit_id,
+                                  tagName
+                                );
+                              }
+                            }}
+                            className="px-3 py-1 bg-[#8b95c9] text-white rounded text-sm hover:bg-[#7a85b8] transition-colors"
+                          >
+                            New Tag
+                          </button>
+                        </div>
+                        
+                        <div className="space-y-3">
+                          {versionControl.tags.length === 0 ? (
+                            <div className="text-center py-4 text-gray-500 text-sm">
+                              No tags yet
                             </div>
-                            <div className="text-xs text-gray-500">
-                              {new Date(change.timestamp).toLocaleDateString()}
-                            </div>
-                          </div>
-                        ))}
+                          ) : (
+                            versionControl.tags.map((tag) => (
+                              <div key={tag.id} className="p-3 bg-gray-50 rounded-lg">
+                                <div className="font-medium text-gray-900">{tag.name}</div>
+                                <div className="text-xs text-gray-600">{tag.description}</div>
+                                <div className="text-xs text-gray-500 mt-1">
+                                  {versionControl.formatDate(tag.created_at)}
+                                </div>
+                              </div>
+                            ))
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Quick Actions */}
+                      <div className="bg-white border border-[#d6edff] rounded-lg p-6">
+                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+                        <div className="space-y-3">
+                          <button 
+                            onClick={() => {
+                              const buildSnapshot = {
+                                ...currentBuild,
+                                parts: buildParts,
+                                analysis: buildAnalysis,
+                                optimizations: currentBuild.optimizations
+                              };
+                              createNewCommit("Auto-save build changes", buildSnapshot);
+                            }}
+                            className="w-full px-4 py-2 bg-[#84dcc6] text-white rounded-lg text-sm hover:bg-[#73cbb5] transition-colors"
+                          >
+                            Auto-Save
+                          </button>
+                          <button 
+                            onClick={() => {
+                              const newBranchName = prompt("Enter new branch name:", "experimental");
+                              if (newBranchName) {
+                                createNewBranch(newBranchName, "Experimental branch");
+                              }
+                            }}
+                            className="w-full px-4 py-2 bg-[#8b95c9] text-white rounded-lg text-sm hover:bg-[#7a85b8] transition-colors"
+                          >
+                            Create Experimental Branch
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              )}
 
               {/* Version Control Tips */}
               <div className="mt-6 bg-[#d6edff]/20 rounded-lg p-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Version Control Best Practices</h3>
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
-                    <h4 className="font-medium text-gray-900 mb-2">Version Management:</h4>
+                    <h4 className="font-medium text-gray-900 mb-2">Commit Strategy:</h4>
                     <ul className="text-sm text-gray-600 space-y-1">
-                      <li>• Create versions for major design changes</li>
-                      <li>• Use descriptive version names and descriptions</li>
-                      <li>• Keep track of performance improvements</li>
-                      <li>• Document significant changes in each version</li>
+                      <li>• Commit frequently with descriptive messages</li>
+                      <li>• Use branches for experimental features</li>
+                      <li>• Tag important versions (v1.0, v2.0, etc.)</li>
+                      <li>• Revert to previous commits when needed</li>
                     </ul>
                   </div>
                   <div>
@@ -3652,8 +3753,8 @@ export default function DroneLifecycle() {
                     <ul className="text-sm text-gray-600 space-y-1">
                       <li>• Use main branch for stable designs</li>
                       <li>• Create feature branches for experiments</li>
-                      <li>• Merge successful features back to main</li>
                       <li>• Keep experimental branches separate</li>
+                      <li>• Merge successful features back to main</li>
                     </ul>
                   </div>
                 </div>
@@ -3666,15 +3767,6 @@ export default function DroneLifecycle() {
                   className="px-6 py-3 text-gray-600 hover:text-gray-800 transition-colors"
                 >
                   Close
-                </button>
-                <button 
-                  onClick={() => {
-                    showToast("Version control settings saved!", "success");
-                    setShowVersionControlModal(false);
-                  }}
-                  className="px-6 py-3 bg-[#8b95c9] text-white rounded-lg hover:bg-[#7a85b8] transition-colors"
-                >
-                  Save Settings
                 </button>
               </div>
             </div>

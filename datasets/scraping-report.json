@@ -1,0 +1,28 @@
+{
+  "total_motors": 29,
+  "brands": [
+    "Lumenier",
+    "AOS",
+    "GEPRC",
+    "iFlight",
+    "EMAX",
+    "ZOHD",
+    "Ethix",
+    "BrotherHobby"
+  ],
+  "price_range": {
+    "min": 12.99,
+    "max": 44.49,
+    "average": 29.71413793103449
+  },
+  "kv_ranges": [
+    "1700",
+    "1980",
+    "18000",
+    "1590",
+    "1300",
+    "4000",
+    "1450"
+  ],
+  "scraped_at": "2025-08-05T02:22:24.053Z"
+}

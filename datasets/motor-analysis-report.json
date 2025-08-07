@@ -1,0 +1,413 @@
+{
+  "summary": {
+    "total_motors": 29,
+    "brands": [
+      "Lumenier",
+      "AOS",
+      "GEPRC",
+      "iFlight",
+      "EMAX",
+      "ZOHD",
+      "Ethix",
+      "BrotherHobby"
+    ],
+    "price_stats": {
+      "min": 12.99,
+      "max": 44.49,
+      "average": 29.71413793103449,
+      "median": 31.49
+    },
+    "weight_stats": {
+      "min": null,
+      "max": null,
+      "average": null,
+      "median": null
+    },
+    "kv_stats": {
+      "min": 1300,
+      "max": 18000,
+      "average": 4108.571428571428,
+      "median": 1590
+    }
+  },
+  "price_distribution": [
+    {
+      "range": "$0-$20",
+      "count": 7,
+      "percentage": "24.1"
+    },
+    {
+      "range": "$20-$50",
+      "count": 22,
+      "percentage": "75.9"
+    },
+    {
+      "range": "$50-$100",
+      "count": 0,
+      "percentage": "0.0"
+    },
+    {
+      "range": "$100-$200",
+      "count": 0,
+      "percentage": "0.0"
+    },
+    {
+      "range": "$200-$500",
+      "count": 0,
+      "percentage": "0.0"
+    },
+    {
+      "range": "$500+",
+      "count": 0,
+      "percentage": "0.0"
+    }
+  ],
+  "kv_distribution": [
+    {
+      "range": "0-100 KV",
+      "count": 0,
+      "percentage": "0.0"
+    },
+    {
+      "range": "100-200 KV",
+      "count": 0,
+      "percentage": "0.0"
+    },
+    {
+      "range": "200-500 KV",
+      "count": 0,
+      "percentage": "0.0"
+    },
+    {
+      "range": "500-1000 KV",
+      "count": 0,
+      "percentage": "0.0"
+    },
+    {
+      "range": "1000-2000 KV",
+      "count": 16,
+      "percentage": "76.2"
+    },
+    {
+      "range": "2000+ KV",
+      "count": 5,
+      "percentage": "23.8"
+    }
+  ],
+  "brand_distribution": [
+    {
+      "brand": "Lumenier",
+      "count": 8,
+      "percentage": "27.6"
+    },
+    {
+      "brand": "iFlight",
+      "count": 6,
+      "percentage": "20.7"
+    },
+    {
+      "brand": "GEPRC",
+      "count": 3,
+      "percentage": "10.3"
+    },
+    {
+      "brand": "EMAX",
+      "count": 3,
+      "percentage": "10.3"
+    },
+    {
+      "brand": "BrotherHobby",
+      "count": 3,
+      "percentage": "10.3"
+    },
+    {
+      "brand": "AOS",
+      "count": 2,
+      "percentage": "6.9"
+    },
+    {
+      "brand": "ZOHD",
+      "count": 2,
+      "percentage": "6.9"
+    },
+    {
+      "brand": "Ethix",
+      "count": 2,
+      "percentage": "6.9"
+    }
+  ],
+  "best_value_motors": [
+    {
+      "name": "Lumenier ZIP V2 2407 Blackout Motor - 1700KV",
+      "price": "29.99",
+      "image_url": "https://cdn-v2.getfpv.com/media/catalog/product/cache/fa4da5475405b0da777dc0f4b9d16483/l/u/lumenier-gate-breaker-propeller-transparent-black.jpg",
+      "description": "The Lumenier ZIP V2 motor line continues to grow with the addition of the ZIP V2 2407 Blackout Motor.",
+      "specifications": "{\"SKU\":\"21167\",\"UPC (GTIN)\":\"724376363568\",\"Manufacturer\":\"Lumenier\",\"NDAA Compliant\":\"No\",\"Popo Compatible\":\"No\"}",
+      "kv": "1700",
+      "weight": "",
+      "shaft_diameter": "",
+      "mounting_holes": "",
+      "max_current": "",
+      "max_power": "",
+      "thrust": "",
+      "motor_size": "2407",
+      "brand": "Lumenier",
+      "url": "https://www.getfpv.com/lumenier-zip-v2-2407-blackout-motor-1700kv.html",
+      "valueScore": null
+    },
+    {
+      "name": "Lumenier ZIP V2 2407 Blackout Motor - 1700KV",
+      "price": "29.99",
+      "image_url": "https://cdn-v2.getfpv.com/media/catalog/product/cache/fa4da5475405b0da777dc0f4b9d16483/l/u/lumenier-gate-breaker-propeller-transparent-black.jpg",
+      "description": "The Lumenier ZIP V2 motor line continues to grow with the addition of the ZIP V2 2407 Blackout Motor.",
+      "specifications": "{\"SKU\":\"21167\",\"UPC (GTIN)\":\"724376363568\",\"Manufacturer\":\"Lumenier\",\"NDAA Compliant\":\"No\",\"Popo Compatible\":\"No\"}",
+      "kv": "1700",
+      "weight": "",
+      "shaft_diameter": "",
+      "mounting_holes": "",
+      "max_current": "",
+      "max_power": "",
+      "thrust": "",
+      "motor_size": "2407",
+      "brand": "Lumenier",
+      "url": "https://www.getfpv.com/lumenier-zip-v2-2407-blackout-motor-1700kv.html",
+      "valueScore": null
+    },
+    {
+      "name": "Lumenier 2807 JohnnyFPV V3 Pro Cinematic Motor",
+      "price": "38.99",
+      "image_url": "https://cdn-v2.getfpv.com/media/catalog/product/cache/efa274e45d237d68d5101ae017c2e250/l/u/lumenier-qav-s-2-johnnyfpv-se-5inch-frame-kit-alt-main_2.jpg",
+      "description": "Introducing the Lumenier 2807 JohnnyFPV V3 Motor, designed for high-performance cinematography, FPV drone racing, and long-range drone flying.",
+      "specifications": "{\"SKU\":\"22323\",\"Manufacturer\":\"Lumenier\",\"NDAA Compliant\":\"No\",\"Popo Compatible\":\"No\"}",
+      "kv": "",
+      "weight": "",
+      "shaft_diameter": "",
+      "mounting_holes": "",
+      "max_current": "",
+      "max_power": "",
+      "thrust": "",
+      "motor_size": "2807",
+      "brand": "Lumenier",
+      "url": "https://www.getfpv.com/lumenier-2807-johnnyfpv-v3-pro-cinematic-motor.html",
+      "valueScore": null
+    },
+    {
+      "name": "Lumenier 2807 JohnnyFPV V3 Pro Cinematic Motor",
+      "price": "38.99",
+      "image_url": "https://cdn-v2.getfpv.com/media/catalog/product/cache/efa274e45d237d68d5101ae017c2e250/l/u/lumenier-qav-s-2-johnnyfpv-se-5inch-frame-kit-alt-main_2.jpg",
+      "description": "Introducing the Lumenier 2807 JohnnyFPV V3 Motor, designed for high-performance cinematography, FPV drone racing, and long-range drone flying.",
+      "specifications": "{\"SKU\":\"22323\",\"Manufacturer\":\"Lumenier\",\"NDAA Compliant\":\"No\",\"Popo Compatible\":\"No\"}",
+      "kv": "",
+      "weight": "",
+      "shaft_diameter": "",
+      "mounting_holes": "",
+      "max_current": "",
+      "max_power": "",
+      "thrust": "",
+      "motor_size": "2807",
+      "brand": "Lumenier",
+      "url": "https://www.getfpv.com/lumenier-2807-johnnyfpv-v3-pro-cinematic-motor.html",
+      "valueScore": null
+    },
+    {
+      "name": "Lumenier 2807 JohnnyFPV V3 Pro Cinematic Motor",
+      "price": "38.99",
+      "image_url": "https://cdn-v2.getfpv.com/media/catalog/product/cache/efa274e45d237d68d5101ae017c2e250/l/u/lumenier-qav-s-2-johnnyfpv-se-5inch-frame-kit-alt-main_2.jpg",
+      "description": "Introducing the Lumenier 2807 JohnnyFPV V3 Motor, designed for high-performance cinematography, FPV drone racing, and long-range drone flying.",
+      "specifications": "{\"SKU\":\"22323\",\"Manufacturer\":\"Lumenier\",\"NDAA Compliant\":\"No\",\"Popo Compatible\":\"No\"}",
+      "kv": "",
+      "weight": "",
+      "shaft_diameter": "",
+      "mounting_holes": "",
+      "max_current": "",
+      "max_power": "",
+      "thrust": "",
+      "motor_size": "2807",
+      "brand": "Lumenier",
+      "url": "https://www.getfpv.com/lumenier-2807-johnnyfpv-v3-pro-cinematic-motor.html",
+      "valueScore": null
+    }
+  ],
+  "recommendations": [
+    {
+      "category": "Freestyle Motors (1500-2500 KV)",
+      "motors": [
+        {
+          "name": "Lumenier ZIP V2 2407 Blackout Motor - 1700KV",
+          "price": "29.99",
+          "image_url": "https://cdn-v2.getfpv.com/media/catalog/product/cache/fa4da5475405b0da777dc0f4b9d16483/l/u/lumenier-gate-breaker-propeller-transparent-black.jpg",
+          "description": "The Lumenier ZIP V2 motor line continues to grow with the addition of the ZIP V2 2407 Blackout Motor.",
+          "specifications": "{\"SKU\":\"21167\",\"UPC (GTIN)\":\"724376363568\",\"Manufacturer\":\"Lumenier\",\"NDAA Compliant\":\"No\",\"Popo Compatible\":\"No\"}",
+          "kv": "1700",
+          "weight": "",
+          "shaft_diameter": "",
+          "mounting_holes": "",
+          "max_current": "",
+          "max_power": "",
+          "thrust": "",
+          "motor_size": "2407",
+          "brand": "Lumenier",
+          "url": "https://www.getfpv.com/lumenier-zip-v2-2407-blackout-motor-1700kv.html"
+        },
+        {
+          "name": "Lumenier ZIP V2 2407 Blackout Motor - 1700KV",
+          "price": "29.99",
+          "image_url": "https://cdn-v2.getfpv.com/media/catalog/product/cache/fa4da5475405b0da777dc0f4b9d16483/l/u/lumenier-gate-breaker-propeller-transparent-black.jpg",
+          "description": "The Lumenier ZIP V2 motor line continues to grow with the addition of the ZIP V2 2407 Blackout Motor.",
+          "specifications": "{\"SKU\":\"21167\",\"UPC (GTIN)\":\"724376363568\",\"Manufacturer\":\"Lumenier\",\"NDAA Compliant\":\"No\",\"Popo Compatible\":\"No\"}",
+          "kv": "1700",
+          "weight": "",
+          "shaft_diameter": "",
+          "mounting_holes": "",
+          "max_current": "",
+          "max_power": "",
+          "thrust": "",
+          "motor_size": "2407",
+          "brand": "Lumenier",
+          "url": "https://www.getfpv.com/lumenier-zip-v2-2407-blackout-motor-1700kv.html"
+        },
+        {
+          "name": "AOS RC Supernova 2207 FPV Motor - 1980KV",
+          "price": "37.99",
+          "image_url": "https://cdn-v2.getfpv.com/media/catalog/product/cache/fa4da5475405b0da777dc0f4b9d16483/a/o/aos-rc-fpv-frame-kit---cine35-evo.jpg",
+          "description": "Introducing the AOS RC Supernova Motor, designed for high-performance FPV drones.",
+          "specifications": "{\"SKU\":\"21317\",\"UPC (GTIN)\":\"724376356249\",\"Manufacturer\":\"AOS RC\",\"NDAA Compliant\":\"No\",\"Popo Compatible\":\"No\"}",
+          "kv": "1980",
+          "weight": "",
+          "shaft_diameter": "",
+          "mounting_holes": "",
+          "max_current": "",
+          "max_power": "",
+          "thrust": "",
+          "motor_size": "2207",
+          "brand": "AOS",
+          "url": "https://www.getfpv.com/aos-rc-supernova-2207-fpv-motor-1980kv.html"
+        },
+        {
+          "name": "AOS RC Supernova 2207 FPV Motor - 1980KV",
+          "price": "37.99",
+          "image_url": "https://cdn-v2.getfpv.com/media/catalog/product/cache/fa4da5475405b0da777dc0f4b9d16483/a/o/aos-rc-fpv-frame-kit---cine35-evo.jpg",
+          "description": "Introducing the AOS RC Supernova Motor, designed for high-performance FPV drones.",
+          "specifications": "{\"SKU\":\"21317\",\"UPC (GTIN)\":\"724376356249\",\"Manufacturer\":\"AOS RC\",\"NDAA Compliant\":\"No\",\"Popo Compatible\":\"No\"}",
+          "kv": "1980",
+          "weight": "",
+          "shaft_diameter": "",
+          "mounting_holes": "",
+          "max_current": "",
+          "max_power": "",
+          "thrust": "",
+          "motor_size": "2207",
+          "brand": "AOS",
+          "url": "https://www.getfpv.com/aos-rc-supernova-2207-fpv-motor-1980kv.html"
+        },
+        {
+          "name": "iFlight R5 2207 Motor - 1590KV/2050KV",
+          "price": "31.49",
+          "image_url": "https://cdn-v2.getfpv.com/media/catalog/product/cache/fa4da5475405b0da777dc0f4b9d16483/n/e/newbeedrone-tool-kit-_soldering-iron_-drivers_-wrench_-_image-1_.jpg",
+          "description": "Engineered for racing drones like the Mach R5, the R5 2207 Motor delivers smooth, responsive power with upgraded N52H arc magnets and ultra-efficient design.",
+          "specifications": "{\"SKU\":\"23345\",\"Manufacturer\":\"iFlight\",\"NDAA Compliant\":\"No\",\"Popo Compatible\":\"No\"}",
+          "kv": "1590",
+          "weight": "",
+          "shaft_diameter": "",
+          "mounting_holes": "",
+          "max_current": "",
+          "max_power": "",
+          "thrust": "",
+          "motor_size": "2207",
+          "brand": "iFlight",
+          "url": "https://www.getfpv.com/iflight-r5-2207-motor-1590kv-2050kv.html"
+        }
+      ]
+    },
+    {
+      "category": "Budget Motors (<$30)",
+      "motors": [
+        {
+          "name": "Lumenier ZIP V2 2407 Blackout Motor - 1700KV",
+          "price": "29.99",
+          "image_url": "https://cdn-v2.getfpv.com/media/catalog/product/cache/fa4da5475405b0da777dc0f4b9d16483/l/u/lumenier-gate-breaker-propeller-transparent-black.jpg",
+          "description": "The Lumenier ZIP V2 motor line continues to grow with the addition of the ZIP V2 2407 Blackout Motor.",
+          "specifications": "{\"SKU\":\"21167\",\"UPC (GTIN)\":\"724376363568\",\"Manufacturer\":\"Lumenier\",\"NDAA Compliant\":\"No\",\"Popo Compatible\":\"No\"}",
+          "kv": "1700",
+          "weight": "",
+          "shaft_diameter": "",
+          "mounting_holes": "",
+          "max_current": "",
+          "max_power": "",
+          "thrust": "",
+          "motor_size": "2407",
+          "brand": "Lumenier",
+          "url": "https://www.getfpv.com/lumenier-zip-v2-2407-blackout-motor-1700kv.html"
+        },
+        {
+          "name": "Lumenier ZIP V2 2407 Blackout Motor - 1700KV",
+          "price": "29.99",
+          "image_url": "https://cdn-v2.getfpv.com/media/catalog/product/cache/fa4da5475405b0da777dc0f4b9d16483/l/u/lumenier-gate-breaker-propeller-transparent-black.jpg",
+          "description": "The Lumenier ZIP V2 motor line continues to grow with the addition of the ZIP V2 2407 Blackout Motor.",
+          "specifications": "{\"SKU\":\"21167\",\"UPC (GTIN)\":\"724376363568\",\"Manufacturer\":\"Lumenier\",\"NDAA Compliant\":\"No\",\"Popo Compatible\":\"No\"}",
+          "kv": "1700",
+          "weight": "",
+          "shaft_diameter": "",
+          "mounting_holes": "",
+          "max_current": "",
+          "max_power": "",
+          "thrust": "",
+          "motor_size": "2407",
+          "brand": "Lumenier",
+          "url": "https://www.getfpv.com/lumenier-zip-v2-2407-blackout-motor-1700kv.html"
+        },
+        {
+          "name": "GEPRC SpeedX2 1002 Motor - No Plug - 18000KV/25000KV",
+          "price": "16.99",
+          "image_url": "https://cdn-v2.getfpv.com/media/catalog/product/cache/fa4da5475405b0da777dc0f4b9d16483/l/u/lumenier-48-in-1-precision-screwdriver-set-_2_.jpg",
+          "description": "Push the limits of your micro drone with the GEPRC SPEEDX2 1002 Motor, available in both 18000KV and 25000KV options. Built for high efficiency and explosive performance, these lightweight brushless motors are perfect for 1.6\" to 2\" builds.",
+          "specifications": "{\"SKU\":\"23493\",\"UPC (GTIN)\":\"723326375019\",\"Manufacturer\":\"GEPRC\",\"NDAA Compliant\":\"No\",\"Popo Compatible\":\"No\"}",
+          "kv": "18000",
+          "weight": "",
+          "shaft_diameter": "",
+          "mounting_holes": "",
+          "max_current": "",
+          "max_power": "",
+          "thrust": "",
+          "motor_size": "1002",
+          "brand": "GEPRC",
+          "url": "https://www.getfpv.com/geprc-speedx2-1002-motor-no-plug-18000kv-25000kv.html"
+        },
+        {
+          "name": "GEPRC SpeedX2 1002 Motor - No Plug - 18000KV/25000KV",
+          "price": "16.99",
+          "image_url": "https://cdn-v2.getfpv.com/media/catalog/product/cache/fa4da5475405b0da777dc0f4b9d16483/l/u/lumenier-48-in-1-precision-screwdriver-set-_2_.jpg",
+          "description": "Push the limits of your micro drone with the GEPRC SPEEDX2 1002 Motor, available in both 18000KV and 25000KV options. Built for high efficiency and explosive performance, these lightweight brushless motors are perfect for 1.6\" to 2\" builds.",
+          "specifications": "{\"SKU\":\"23493\",\"UPC (GTIN)\":\"723326375019\",\"Manufacturer\":\"GEPRC\",\"NDAA Compliant\":\"No\",\"Popo Compatible\":\"No\"}",
+          "kv": "18000",
+          "weight": "",
+          "shaft_diameter": "",
+          "mounting_holes": "",
+          "max_current": "",
+          "max_power": "",
+          "thrust": "",
+          "motor_size": "1002",
+          "brand": "GEPRC",
+          "url": "https://www.getfpv.com/geprc-speedx2-1002-motor-no-plug-18000kv-25000kv.html"
+        },
+        {
+          "name": "GEPRC SpeedX2 1002 Motor - No Plug - 18000KV/25000KV",
+          "price": "16.99",
+          "image_url": "https://cdn-v2.getfpv.com/media/catalog/product/cache/fa4da5475405b0da777dc0f4b9d16483/l/u/lumenier-48-in-1-precision-screwdriver-set-_2_.jpg",
+          "description": "Push the limits of your micro drone with the GEPRC SPEEDX2 1002 Motor, available in both 18000KV and 25000KV options. Built for high efficiency and explosive performance, these lightweight brushless motors are perfect for 1.6\" to 2\" builds.",
+          "specifications": "{\"SKU\":\"23493\",\"UPC (GTIN)\":\"723326375019\",\"Manufacturer\":\"GEPRC\",\"NDAA Compliant\":\"No\",\"Popo Compatible\":\"No\"}",
+          "kv": "18000",
+          "weight": "",
+          "shaft_diameter": "",
+          "mounting_holes": "",
+          "max_current": "",
+          "max_power": "",
+          "thrust": "",
+          "motor_size": "1002",
+          "brand": "GEPRC",
+          "url": "https://www.getfpv.com/geprc-speedx2-1002-motor-no-plug-18000kv-25000kv.html"
+        }
+      ]
+    }
+  ]
+}
