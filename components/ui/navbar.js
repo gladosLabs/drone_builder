@@ -184,12 +184,12 @@ export default function Navbar({ onSave, onLoad, onExportJSON, onExportCSV, save
         <div className="hidden md:flex items-center space-x-6 text-base font-medium">
           <Link href="/" className="hover:text-[#8b95c9] transition-colors">Home</Link>
           <Link href="/dashboard" className="hover:text-[#8b95c9] transition-colors">Dashboard</Link>
-          <Link href="/ai-assistant" className="hover:text-[#8b95c9] transition-colors flex items-center space-x-1">
+          {/* <Link href="/ai-assistant" className="hover:text-[#8b95c9] transition-colors flex items-center space-x-1">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
             </svg>
             <span>AI Assistant</span>
-          </Link>
+          </Link> */}
           <Link href="/community" className="hover:text-[#8b95c9] transition-colors">Community</Link>
           <Link href="/lifecycle" className="hover:text-[#8b95c9] transition-colors">Lifecycle</Link>
           <Link href="/docs" className="hover:text-[#8b95c9] transition-colors">Docs</Link>
